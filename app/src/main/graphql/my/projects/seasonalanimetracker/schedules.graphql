@@ -1,0 +1,143 @@
+query SchedulesQuery($start: Int!, $end: Int!, $page: Int!) {
+  Page(page: $page) {
+    pageInfo {
+      ...PageInfoFragment
+    }
+    airingSchedules(airingAt_greater: $start, airingAt_lesser: $end, sort: [TIME]) {
+      ...ScheduleFragment
+      media {
+        ...MediaFragment
+        characters {
+          ...CharacterFragment
+        }
+        staff {
+          ...StaffFragment
+        }
+        studios(isMain: true) {
+          ...StudioFragment
+        }
+      }
+    }
+  }
+}
+
+query SchedulesPageInfoQuery($start: Int!, $end: Int!) {
+  Page {
+    pageInfo {
+      ...PageInfoFragment
+    }
+    airingSchedules(airingAt_greater: $start, airingAt_lesser: $end, sort: [TIME]) {
+      id
+    }
+  }
+}
+
+query NotificationsQuery {
+  Page {
+    pageInfo {
+      ...PageInfoFragment
+    }
+    notifications(type: AIRING) {
+      ... on AiringNotification {
+        id
+        createdAt
+        episode
+        media {
+          ...MediaFragment
+          characters {
+            ...CharacterFragment
+          }
+          staff {
+            ...StaffFragment
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment PageInfoFragment on PageInfo {
+  total
+  perPage
+  currentPage
+  lastPage
+  hasNextPage
+}
+
+fragment ScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  episode
+}
+
+fragment MediaFragment on Media {
+  id
+  type
+  format
+  title {
+    romaji
+    native
+    english
+  }
+  description
+  coverImage {
+    large
+  }
+  bannerImage
+  episodes
+  genres
+  averageScore
+  meanScore
+  siteUrl
+}
+
+fragment CharacterFragment on CharacterConnection {
+  edges {
+    id
+    media {
+      id
+    }
+    node {
+      id
+      name {
+        full
+      }
+      image {
+        medium
+      }
+    }
+    voiceActors {
+      id
+      name {
+        full
+      }
+      image {
+        medium
+      }
+      language
+    }
+  }
+}
+
+fragment StaffFragment on StaffConnection {
+  edges {
+    id
+    node {
+      id
+      name {
+        full
+      }
+      image {
+        medium
+      }
+    }
+    role
+  }
+}
+
+fragment StudioFragment on StudioConnection {
+  nodes {
+    id
+    name
+  }
+}
