@@ -1,5 +1,6 @@
 package my.projects.seasonalanimetracker.schedule.domain
 
+import android.content.SharedPreferences
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -8,13 +9,22 @@ import java.util.*
 import javax.inject.Inject
 
 interface IScheduleDateSource {
+    fun getCurrentDate(): Calendar
     fun getStartDate(): Calendar
     fun getEndDate(): Calendar
+    fun getLastUpdateDate(): Calendar
+    fun saveUpdateDate(date: Calendar)
 }
 
-class ScheduleDateSource @Inject constructor(): IScheduleDateSource {
+class ScheduleDateSource @Inject constructor(
+    private val sharedPreferences: SharedPreferences
+): IScheduleDateSource {
 
-    private fun getCurrentDate(): Calendar {
+    companion object {
+        const val LAST_UPDATE_DATE_KEY = "last_update_date"
+    }
+
+    override fun getCurrentDate(): Calendar {
         return Calendar.getInstance().also { date ->
             date.set(Calendar.HOUR, 0)
             date.set(Calendar.MINUTE, 0)
@@ -35,6 +45,18 @@ class ScheduleDateSource @Inject constructor(): IScheduleDateSource {
             date.time = getCurrentDate().time
             date.add(Calendar.DATE, 5)
         }
+    }
+
+    override fun getLastUpdateDate(): Calendar {
+        return Calendar.getInstance().also {
+            it.timeInMillis = sharedPreferences.getLong(LAST_UPDATE_DATE_KEY, 0L)
+        }
+    }
+
+    override fun saveUpdateDate(date: Calendar) {
+        val editor = sharedPreferences.edit()
+        editor.putLong(LAST_UPDATE_DATE_KEY, date.timeInMillis)
+        editor.apply()
     }
 }
 

@@ -1,18 +1,38 @@
 package my.projects.seasonalanimetracker.schedule.ui.tabs
 
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import java.time.DayOfWeek
 
-class ScheduleTabViewPagerAdapter(fragment: Fragment, private val schedule: Map<DayOfWeek, List<ScheduleMediaItem>>): FragmentStateAdapter(fragment) {
+class ScheduleTabViewPagerAdapter(fragmentManager: FragmentManager, schedule: Map<DayOfWeek, List<ScheduleMediaItem>>):
+    FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    override fun getItemCount(): Int {
-        return schedule.keys.size
+    private val data = LinkedHashMap<DayOfWeek, List<ScheduleMediaItem>>().also {
+        it.putAll(schedule)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        val dayOfWeek = DayOfWeek.valueOf(schedule.keys.toList()[position].name)
-        return ScheduleTabFragment.newInstance(schedule[dayOfWeek]!!) // TODO resolve nullability in a better way
+    fun updateData(items: Map<DayOfWeek, List<ScheduleMediaItem>>) {
+        data.clear()
+        data.putAll(items)
+        notifyDataSetChanged()
+    }
+
+    override fun getCount(): Int {
+        return data.keys.size
+    }
+
+    override fun getItem(position: Int): Fragment {
+        val dayOfWeek = DayOfWeek.valueOf(data.keys.toList()[position].name)
+        return ScheduleTabFragment.newInstance(data[dayOfWeek]!!) // TODO resolve nullability in a better way
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return data.keys.toList()[position].name
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 }

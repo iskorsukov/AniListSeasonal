@@ -21,7 +21,7 @@ abstract class ScheduleDAO: MediaDAO() {
     protected abstract fun saveScheduleItem(scheduleItem: DBScheduleItem)
 
     @Query("delete from schedules")
-    protected abstract fun clearSchedules()
+    abstract fun clearSchedules()
 
     @Transaction
     open fun saveSchedule(schedules: List<DBScheduleItemEntity>) {

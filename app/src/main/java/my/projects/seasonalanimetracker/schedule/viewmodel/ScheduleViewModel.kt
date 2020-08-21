@@ -24,15 +24,14 @@ abstract class IScheduleViewModel: ViewModel() {
 }
 
 class ScheduleViewModel @ViewModelInject constructor (
-    private val scheduleDataSource: IScheduleDataSource,
-    private val dateSource: IScheduleDateSource
+    private val scheduleDataSource: IScheduleDataSource
 ): IScheduleViewModel() {
 
     private var scheduleDisposable = CompositeDisposable()
 
     private val scheduleLD = MutableLiveData<IScheduleVO>().also {
         val disposable = scheduleDataSource.getSchedule().subscribe { schedules ->
-            it.postValue(ScheduleVO(schedulesToDayOfWeekMap(schedules)))
+            it.postValue(ScheduleVO(schedules))
         }
         scheduleDisposable.add(disposable)
     }
@@ -42,7 +41,7 @@ class ScheduleViewModel @ViewModelInject constructor (
     }
 
     override fun updateSchedule() {
-        val disposable = scheduleDataSource.updateSchedule(dateSource.getStartDate(), dateSource.getEndDate()).subscribe(
+        val disposable = scheduleDataSource.updateSchedule().subscribe(
             {},
             { throwable: Throwable? -> throwable?.printStackTrace() }
         )
@@ -52,28 +51,6 @@ class ScheduleViewModel @ViewModelInject constructor (
     override fun onCleared() {
         super.onCleared()
         scheduleDisposable.dispose()
-    }
-
-    private fun schedulesToDayOfWeekMap(schedules: List<ScheduleMediaItem>): Map<DayOfWeek, List<ScheduleMediaItem>> {
-        val startDateDayOfWeek = ScheduleDataUtils.dayOfWeekFromMillis(dateSource.getStartDate().timeInMillis)
-        val orderedDaysOfWeek = DayOfWeek.values().asList().toMutableList()
-        while (orderedDaysOfWeek.first() != startDateDayOfWeek) {
-            orderedDaysOfWeek.add(orderedDaysOfWeek.removeAt(0))
-        }
-        val map = mutableMapOf<DayOfWeek, MutableList<ScheduleMediaItem>>()
-        for (dayOfWeek in orderedDaysOfWeek) {
-            map[dayOfWeek] = mutableListOf()
-            for (schedule in schedules) {
-                val scheduleDayOfWeek = ScheduleDataUtils.dayOfWeekFromMillis(schedule.airingAt)
-                if (scheduleDayOfWeek == dayOfWeek) {
-                    map[dayOfWeek]!!.add(schedule)
-                }
-            }
-            val list = map[dayOfWeek]
-            list!!.sortBy { scheduleMediaItem -> scheduleMediaItem.airingAt }
-            map[dayOfWeek] = list
-        }
-        return map
     }
 }
 
