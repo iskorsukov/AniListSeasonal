@@ -14,6 +14,7 @@ import my.projects.seasonalanimetracker.db.MediaDatabase
 import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItem
 import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItemEntity
 import timber.log.Timber
+import javax.inject.Singleton
 
 @Dao
 abstract class NotificationsDAO: MediaDAO() {
@@ -60,6 +61,7 @@ abstract class NotificationsDAO: MediaDAO() {
 @InstallIn(ApplicationComponent::class)
 class NotificationsDAOModule {
     @Provides
+    @Singleton
     fun providesNotificationDao(db: MediaDatabase): NotificationsDAO {
         return db.notificationsDao()
     }

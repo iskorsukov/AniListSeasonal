@@ -5,10 +5,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Observable
 import my.projects.seasonalanimetracker.db.MediaDatabase
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItem
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItemEntity
+import javax.inject.Singleton
 
 @Dao
 abstract class ScheduleDAO: MediaDAO() {
@@ -49,9 +51,10 @@ abstract class ScheduleDAO: MediaDAO() {
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 class ScheduleDAOModule {
     @Provides
+    @Singleton
     fun providesScheduleDao(db: MediaDatabase): ScheduleDAO {
         return db.scheduleDao()
     }

@@ -1,6 +1,13 @@
 package my.projects.seasonalanimetracker.notifications.domain.work
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.work.RxWorker
@@ -9,12 +16,16 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
+import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.db.dao.NotificationsDAO
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
 import my.projects.seasonalanimetracker.notifications.domain.INotificationsLoader
 import my.projects.seasonalanimetracker.notifications.domain.mapper.db.NotificationDataToEntityMapper
 import my.projects.seasonalanimetracker.notifications.domain.mapper.db.NotificationEntityToDataMapper
 import timber.log.Timber
+import java.text.DateFormat
+import java.util.*
+import kotlin.random.Random
 
 class NotificationCheckWorker @WorkerInject constructor(
     @Assisted context: Context,
@@ -24,6 +35,12 @@ class NotificationCheckWorker @WorkerInject constructor(
     private val notificationEntityToDataMapper: NotificationEntityToDataMapper,
     private val notificationDataToEntityMapper: NotificationDataToEntityMapper
 ): RxWorker(context, workerParameters) {
+
+    companion object {
+        const val CHANNEL_ID = "airing_notifications"
+        const val CHANNEL_NAME = "Airing Shows Notifications"
+        const val CHANNEL_DESC = "Notifications for shows that aired recently"
+    }
 
     override fun createWork(): Single<Result> {
         return hasUnreadNotifications().flatMap { hasUnread ->
@@ -58,8 +75,15 @@ class NotificationCheckWorker @WorkerInject constructor(
     }
 
     private fun raiseNotifications(notifications: List<NotificationMediaItem>): Completable {
-        // TODO implement
-        return Completable.complete()
+        return Completable.fromAction {
+            createNotificationChannel()
+            val createdNotifications = notifications.map { createNotification(it) }
+            with (NotificationManagerCompat.from(applicationContext)) {
+                createdNotifications.forEach {
+                    notify(Random.nextInt(), it)
+                }
+            }
+        }
     }
 
     private fun storeNotifications(notifications: List<NotificationMediaItem>): Completable {
@@ -74,4 +98,37 @@ class NotificationCheckWorker @WorkerInject constructor(
             }
             .subscribeOn(Schedulers.io())
     }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = CHANNEL_NAME
+            val descriptionText = CHANNEL_DESC
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun createNotification(notification: NotificationMediaItem): Notification {
+        val formattedTime = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
+            Date(notification.createdAt)
+        )
+
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setContentTitle(notification.media.titleEnglish ?: notification.media.titleRomaji ?: notification.media.titleNative ?: "Show aired")
+            .setContentText("Ep ${notification.episode} just aired at $formattedTime")
+            .setSmallIcon(R.drawable.ic_notifications_white)
+            .setAutoCancel(true)
+
+        return builder.build()
+    }
+
 }
