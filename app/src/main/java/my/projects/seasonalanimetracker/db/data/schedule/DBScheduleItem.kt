@@ -10,8 +10,7 @@ import my.projects.seasonalanimetracker.db.data.media.DBMedia
         ForeignKey(
             entity = DBMedia::class,
             parentColumns = ["id"],
-            childColumns = ["mediaId"],
-            onDelete = ForeignKey.CASCADE
+            childColumns = ["mediaId"]
         )
     ]
 )
