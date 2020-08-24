@@ -50,7 +50,9 @@ class NotificationCheckWorker @WorkerInject constructor(
                     notificationsLoader.loadNotifications().subscribeOn(Schedulers.io()),
                     getStoredNotifications().subscribeOn(Schedulers.io()),
                     BiFunction { loadedNotifications: List<NotificationMediaItem>, storedNotifications: List<NotificationMediaItem> ->
-                        loadedNotifications.filter { item -> storedNotifications.contains(item) }
+                        loadedNotifications.filterNot { item ->
+                            storedNotifications.any { it.id == item.id }
+                        }
                     }
                 )
             } else {
@@ -75,6 +77,7 @@ class NotificationCheckWorker @WorkerInject constructor(
     }
 
     private fun raiseNotifications(notifications: List<NotificationMediaItem>): Completable {
+        Timber.d("Raising ${notifications.size} notifications")
         return Completable.fromAction {
             createNotificationChannel()
             val createdNotifications = notifications.map { createNotification(it) }

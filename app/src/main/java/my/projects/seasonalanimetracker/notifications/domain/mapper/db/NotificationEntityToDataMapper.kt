@@ -43,7 +43,7 @@ class NotificationEntityToDataMapper @Inject constructor() {
             averageScore = entity.media.averageScore,
             meanScore = entity.media.meanScore,
             character = mapCharacters(entity.characterEntities),
-            studios = mapStudios(entity.studioEntities),
+            studios = emptyList(),
             staff = mapStaff(entity.staffEntities),
             siteUrl = entity.media.siteUrl
         )
@@ -56,7 +56,7 @@ class NotificationEntityToDataMapper @Inject constructor() {
                 mapCharacter(entity.character),
                 mapVoiceActor(entity.voiceActor)
             )
-        }.sortedBy { entity -> entity.id }
+        }.sortedBy { it.id }
     }
 
     fun mapCharacter(characterEntity: DBCharacter): my.projects.seasonalanimetracker.app.common.data.characters.Character {
@@ -78,18 +78,6 @@ class NotificationEntityToDataMapper @Inject constructor() {
         }
     }
 
-    fun mapStudios(studioEntities: List<DBMediaStudioEntity>): List<MediaStudio> {
-        return studioEntities.map { entity ->
-            MediaStudio(
-                entity.mediaStudio.id,
-                Studio(
-                    entity.studio.id,
-                    entity.studio.name
-                )
-            )
-        }.sortedBy { entity -> entity.id }
-    }
-
     fun mapStaff(staffEntities: List<DBMediaStaffEntity>): List<MediaStaff> {
         return staffEntities.map { entity ->
             MediaStaff(
@@ -101,7 +89,7 @@ class NotificationEntityToDataMapper @Inject constructor() {
                 ),
                 entity.mediaStaff.role
             )
-        }.sortedBy { entity -> entity.id }
+        }.sortedBy { it.id }
     }
 
 }

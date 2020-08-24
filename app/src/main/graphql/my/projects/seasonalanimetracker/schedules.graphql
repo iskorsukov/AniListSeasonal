@@ -37,7 +37,7 @@ query NotificationsQuery {
     pageInfo {
       ...PageInfoFragment
     }
-    notifications(type: AIRING) {
+    notifications(type: AIRING, resetNotificationCount: true) {
       ... on AiringNotification {
         id
         createdAt
