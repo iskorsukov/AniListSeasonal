@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ class AuthDataSource @Inject constructor (private val prefs: SharedPreferences):
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 abstract class AuthDataSourceModule {
     @Binds
     abstract fun bindsAuthDataSource(authDataSource: AuthDataSource): IAuthDataSource

@@ -56,6 +56,12 @@ query NotificationsQuery {
   }
 }
 
+query UnreadNotificationsQuery {
+  Viewer {
+    unreadNotificationCount
+  }
+}
+
 fragment PageInfoFragment on PageInfo {
   total
   perPage

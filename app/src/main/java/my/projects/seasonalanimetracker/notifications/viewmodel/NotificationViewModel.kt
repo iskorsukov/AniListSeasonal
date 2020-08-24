@@ -2,6 +2,7 @@ package my.projects.seasonalanimetracker.notifications.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import dagger.Binds
@@ -24,8 +25,11 @@ class NotificationViewModel @ViewModelInject constructor(
 
     private val notificationsDisposable = CompositeDisposable()
 
-    private val notificationsLD = notificationsDataSource.getNotifications().map {
-        PagedNotificationsVO(it) as INotificationsVO
+    private val notificationsLD = MutableLiveData<INotificationsVO>().also {
+         val disposable = notificationsDataSource.getNotifications().map {
+            PagedNotificationsVO(it) as INotificationsVO
+        }.subscribe { notificationsVO -> it.postValue(notificationsVO) }
+        notificationsDisposable.add(disposable)
     }
 
     override fun notificationsLD(): LiveData<INotificationsVO> {

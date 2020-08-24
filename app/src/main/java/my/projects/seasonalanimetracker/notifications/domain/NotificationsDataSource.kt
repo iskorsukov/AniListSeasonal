@@ -1,12 +1,12 @@
 package my.projects.seasonalanimetracker.notifications.domain
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
-import androidx.paging.toLiveData
+import androidx.paging.toObservable
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +18,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 interface INotificationsDataSource {
-    fun getNotifications(): LiveData<PagedList<NotificationMediaItem>>
+    fun getNotifications(): Observable<PagedList<NotificationMediaItem>>
     fun updateNotifications(): Completable
 }
 
@@ -29,10 +29,10 @@ class NotificationsDataSource @Inject constructor(
     private val dataToEntityMapper: NotificationDataToEntityMapper
 ): INotificationsDataSource {
 
-    override fun getNotifications(): LiveData<PagedList<NotificationMediaItem>> {
-        return notificationsDAO.getNotifications().map {
+    override fun getNotifications(): Observable<PagedList<NotificationMediaItem>> {
+        return notificationsDAO.getPagedNotifications().map {
             entityToDataMapper.map(it)
-        }.toLiveData(pageSize = 20)
+        }.toObservable(pageSize = 20)
     }
 
     override fun updateNotifications(): Completable {
@@ -50,7 +50,7 @@ class NotificationsDataSource @Inject constructor(
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 abstract class NotificationDataSourceModule {
     @Binds
     abstract fun bindsNotificationDataSource(notificationsDataSource: NotificationsDataSource): INotificationsDataSource
