@@ -1,19 +1,15 @@
 package my.projects.seasonalanimetracker.db.dao
 
 import androidx.paging.DataSource
-import androidx.paging.PagedList
 import androidx.room.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.ApplicationComponent
-import io.reactivex.Observable
 import io.reactivex.Single
 import my.projects.seasonalanimetracker.db.MediaDatabase
 import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItem
 import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItemEntity
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Dao
@@ -31,7 +27,7 @@ abstract class NotificationsDAO: MediaDAO() {
     protected abstract fun saveNotificationItem(notificationItem: DBNotificationItem)
 
     @Query("delete from notifications")
-    protected abstract fun clearNotifications()
+    abstract fun clearNotifications()
 
     @Transaction
     open fun saveNotifications(notifications: List<DBNotificationItemEntity>) {

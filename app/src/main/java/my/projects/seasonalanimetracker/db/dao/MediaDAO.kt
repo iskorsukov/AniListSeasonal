@@ -1,8 +1,6 @@
 package my.projects.seasonalanimetracker.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
+import androidx.room.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

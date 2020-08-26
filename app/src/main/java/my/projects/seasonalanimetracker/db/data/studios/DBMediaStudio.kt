@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = DBStudio::class,
             parentColumns = ["id"],
-            childColumns = ["studioId"],
-            onDelete = ForeignKey.CASCADE)
+            childColumns = ["studioId"]
+        )
     ]
 )
 data class DBMediaStudio(

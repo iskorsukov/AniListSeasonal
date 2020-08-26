@@ -16,6 +16,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class TestScheduleLoader {
@@ -32,7 +33,7 @@ class TestScheduleLoader {
     fun loadsSchedule() {
         mockQueryResponses(1, sampleData)
 
-        val items = scheduleLoader.loadSchedule().blockingGet()
+        val items = scheduleLoader.loadSchedule(Calendar.getInstance(), Calendar.getInstance()).blockingGet()
 
         assertEquals(sampleData.size, items.size)
         assertEquals(sampleData[0], items[0])
@@ -43,7 +44,7 @@ class TestScheduleLoader {
     fun loadsMultiPageSchedule() {
         mockQueryResponses(2, sampleData)
 
-        val items = scheduleLoader.loadSchedule().blockingGet()
+        val items = scheduleLoader.loadSchedule(Calendar.getInstance(), Calendar.getInstance()).blockingGet()
 
         assertEquals(sampleData.size * 2, items.size)
     }

@@ -7,6 +7,8 @@ import my.projects.seasonalanimetracker.db.data.characters.DBVoiceActor
 import my.projects.seasonalanimetracker.db.data.media.DBMedia
 import my.projects.seasonalanimetracker.db.data.media.DBMediaEntity
 import my.projects.seasonalanimetracker.db.data.media.MediaTitle
+import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItem
+import my.projects.seasonalanimetracker.db.data.notification.DBNotificationItemEntity
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItem
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItemEntity
 import my.projects.seasonalanimetracker.db.data.staff.DBMediaStaff
@@ -113,8 +115,11 @@ class DBTestDataProvider {
         )
     )
 
-    val firstItem: DBScheduleItemEntity
-    val secondItem: DBScheduleItemEntity
+    val firstScheduleItemEntity: DBScheduleItemEntity
+    val secondScheduleItemEntity: DBScheduleItemEntity
+
+    val firstNotificationItemEntity: DBNotificationItemEntity
+    val secondNotificationItemEntity: DBNotificationItemEntity
 
     init {
         val firstMediaEntity = DBMediaEntity(
@@ -178,7 +183,7 @@ class DBTestDataProvider {
             2,
             1L
         )
-        firstItem = DBScheduleItemEntity(
+        firstScheduleItemEntity = DBScheduleItemEntity(
             firstScheduleItem,
             firstMediaEntity
         )
@@ -244,13 +249,37 @@ class DBTestDataProvider {
             6,
             2L
         )
-        secondItem = DBScheduleItemEntity(
+        secondScheduleItemEntity = DBScheduleItemEntity(
             secondScheduleItem,
+            secondMediaEntity
+        )
+
+        firstNotificationItemEntity = DBNotificationItemEntity(
+            DBNotificationItem(
+                1L,
+                1L,
+                System.currentTimeMillis(),
+                1
+            ),
+            firstMediaEntity
+        )
+
+        secondNotificationItemEntity = DBNotificationItemEntity(
+            DBNotificationItem(
+                2L,
+                2L,
+                System.currentTimeMillis(),
+                1
+            ),
             secondMediaEntity
         )
     }
 
-    fun getSampleData(): List<DBScheduleItemEntity> {
-        return listOf(firstItem, secondItem)
+    fun getScheduleSampleData(): List<DBScheduleItemEntity> {
+        return listOf(firstScheduleItemEntity, secondScheduleItemEntity)
+    }
+
+    fun getNotificationsSampleData(): List<DBNotificationItemEntity> {
+        return listOf(firstNotificationItemEntity, secondNotificationItemEntity)
     }
 }

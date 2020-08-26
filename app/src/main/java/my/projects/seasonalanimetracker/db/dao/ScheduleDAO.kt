@@ -19,7 +19,7 @@ abstract class ScheduleDAO: MediaDAO() {
     @Transaction
     abstract fun getSchedule(): Observable<List<DBScheduleItemEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     protected abstract fun saveScheduleItem(scheduleItem: DBScheduleItem)
 
     @Query("delete from schedules")
