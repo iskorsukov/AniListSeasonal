@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import my.projects.seasonalanimetracker.db.dao.MediaDAO
 import my.projects.seasonalanimetracker.db.dao.NotificationsDAO
@@ -22,6 +23,7 @@ import my.projects.seasonalanimetracker.db.data.staff.DBMediaStaff
 import my.projects.seasonalanimetracker.db.data.staff.DBStaff
 import my.projects.seasonalanimetracker.db.data.studios.DBMediaStudio
 import my.projects.seasonalanimetracker.db.data.studios.DBStudio
+import javax.inject.Singleton
 
 @Database(entities = [
     DBCharacter::class,
@@ -42,9 +44,10 @@ abstract class MediaDatabase: RoomDatabase() {
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 class MediaDatabaseModule {
     @Provides
+    @Singleton
     fun providesDatabase(@ApplicationContext context: Context): MediaDatabase {
         return Room.databaseBuilder(context, MediaDatabase::class.java, "media-db").build()
     }

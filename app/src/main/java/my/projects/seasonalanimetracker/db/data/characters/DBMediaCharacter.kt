@@ -2,6 +2,7 @@ package my.projects.seasonalanimetracker.db.data.characters
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "show_character",
@@ -9,14 +10,12 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = DBCharacter::class,
             parentColumns = ["id"],
-            childColumns = ["characterId"],
-            onDelete = ForeignKey.CASCADE
+            childColumns = ["characterId"]
         ),
         ForeignKey(
             entity = DBVoiceActor::class,
             parentColumns = ["id"],
-            childColumns = ["voiceActorId"],
-            onDelete = ForeignKey.CASCADE
+            childColumns = ["voiceActorId"]
         )
     ]
 )

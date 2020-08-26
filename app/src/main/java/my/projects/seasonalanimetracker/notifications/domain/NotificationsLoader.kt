@@ -4,12 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Single
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
 import javax.inject.Inject
 
 interface INotificationsLoader {
     fun loadNotifications(): Single<List<NotificationMediaItem>>
+    fun loadUnreadNotificationsCount(): Single<Int>
 }
 
 class NotificationsLoader @Inject constructor(
@@ -18,10 +20,14 @@ class NotificationsLoader @Inject constructor(
     override fun loadNotifications(): Single<List<NotificationMediaItem>> {
         return queryClient.getPage()
     }
+
+    override fun loadUnreadNotificationsCount(): Single<Int> {
+        return  queryClient.getUnreadNotificationsCount()
+    }
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 abstract class NotificationsLoaderModule {
     @Binds
     abstract fun bindsNotificationsLoader(notificationsLoader: NotificationsLoader): INotificationsLoader

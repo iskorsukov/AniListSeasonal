@@ -1,12 +1,11 @@
 package my.projects.seasonalanimetracker.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
+import androidx.room.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import my.projects.seasonalanimetracker.db.MediaDatabase
 import my.projects.seasonalanimetracker.db.data.characters.DBCharacter
 import my.projects.seasonalanimetracker.db.data.characters.DBMediaCharacter
@@ -16,6 +15,7 @@ import my.projects.seasonalanimetracker.db.data.staff.DBMediaStaff
 import my.projects.seasonalanimetracker.db.data.staff.DBStaff
 import my.projects.seasonalanimetracker.db.data.studios.DBMediaStudio
 import my.projects.seasonalanimetracker.db.data.studios.DBStudio
+import javax.inject.Singleton
 
 @Dao
 abstract class MediaDAO {
@@ -46,9 +46,10 @@ abstract class MediaDAO {
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 class MediaDAOModule {
     @Provides
+    @Singleton
     fun providesMediaDao(db: MediaDatabase): MediaDAO {
         return db.mediaDao()
     }

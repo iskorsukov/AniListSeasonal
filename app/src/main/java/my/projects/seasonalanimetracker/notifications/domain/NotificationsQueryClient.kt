@@ -8,9 +8,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import my.projects.seasonalanimetracker.NotificationsQuery
+import my.projects.seasonalanimetracker.UnreadNotificationsQuery
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
 import my.projects.seasonalanimetracker.notifications.domain.mapper.query.NotificationQueryToDataMapper
 import timber.log.Timber
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 interface INotificationsQueryClient {
     fun getPage(): Single<List<NotificationMediaItem>>
+    fun getUnreadNotificationsCount(): Single<Int>
 }
 
 class NotificationsQueryClient @Inject constructor(
@@ -36,6 +39,14 @@ class NotificationsQueryClient @Inject constructor(
 
     private fun getNotificationsQuery(): NotificationsQuery {
         return NotificationsQuery()
+    }
+
+    override fun getUnreadNotificationsCount(): Single<Int> {
+        return Single.defer<Int> {
+            return@defer Single.create { emitter ->
+                apolloClient.query(UnreadNotificationsQuery()).enqueue(UnreadNotificationsCallback(emitter))
+            }
+        }
     }
 
     private inner class AccumulatorCallback(
@@ -59,10 +70,25 @@ class NotificationsQueryClient @Inject constructor(
             emitter.onSuccess(responseItems)
         }
     }
+
+    private class UnreadNotificationsCallback(
+        val emitter: SingleEmitter<Int>
+    ): ApolloCall.Callback<UnreadNotificationsQuery.Data>() {
+
+        override fun onResponse(response: Response<UnreadNotificationsQuery.Data>) {
+            val count = response.data()?.viewer?.unreadNotificationCount ?: 0
+            emitter.onSuccess(count)
+        }
+
+        override fun onFailure(e: ApolloException) {
+            emitter.onError(IOException(e.message))
+        }
+
+    }
 }
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ApplicationComponent::class)
 abstract class NotificationsQueryClientModule {
     @Binds
     abstract fun bindsNotificationsQueryClient(notificationsQueryClient: NotificationsQueryClient): INotificationsQueryClient

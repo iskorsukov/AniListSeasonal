@@ -13,6 +13,8 @@ import my.projects.seasonalanimetracker.auth.domain.IAuthDataSource
 import my.projects.seasonalanimetracker.auth.viewobject.AuthStatus
 import my.projects.seasonalanimetracker.auth.viewobject.AuthVO
 import my.projects.seasonalanimetracker.auth.viewobject.IAuthVO
+import my.projects.seasonalanimetracker.notifications.domain.work.INotificationWorkManager
+import javax.inject.Inject
 
 abstract class IMainActivityViewModel: ViewModel() {
 
@@ -20,12 +22,14 @@ abstract class IMainActivityViewModel: ViewModel() {
 }
 
 class MainActivityViewModel @ViewModelInject constructor(
-    private val authDataSource: IAuthDataSource
+    private val authDataSource: IAuthDataSource,
+    private val notificationWorkManager: INotificationWorkManager
 ): IMainActivityViewModel() {
 
     private val authStatusLD = MutableLiveData<IAuthVO>().also {
         if (authDataSource.isAuthorized()) {
             it.value = AuthVO(AuthStatus.LOGGED_IN)
+            notificationWorkManager.startNotificationCheckWork()
         } else {
             it.value = AuthVO(AuthStatus.NOT_LOGGED_IN)
         }

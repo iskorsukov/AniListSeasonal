@@ -81,7 +81,7 @@ class NotificationQueryToDataMapper @Inject constructor() {
                     }
                 )
             }
-        } ?: emptyList()
+        }?.sortedBy { it.id } ?: emptyList()
     }
 
     fun mapStaff(staff: NotificationsQuery.Staff): List<MediaStaff> {
@@ -101,22 +101,6 @@ class NotificationQueryToDataMapper @Inject constructor() {
                     edge.role ?: ""
                 )
             }
-        } ?: emptyList()
+        }?.sortedBy { it.id } ?: emptyList()
     }
-    /*
-    fun mapStudios(studios: NotificationsQuery.Studios): List<MediaStudio> {
-        return studios.fragments.studioFragment.nodes?.mapNotNull { node ->
-            if (node == null) {
-                null
-            } else {
-                MediaStudio(
-                    node.id.toLong(),
-                    Studio(
-                        node.id.toLong(),
-                        node.name
-                    )
-                )
-            }
-        } ?: emptyList()
-    } */
 }
