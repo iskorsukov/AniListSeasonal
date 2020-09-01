@@ -17,6 +17,7 @@ import my.projects.seasonalanimetracker.db.data.staff.DBStaff
 import my.projects.seasonalanimetracker.db.data.studios.DBMediaStudio
 import my.projects.seasonalanimetracker.db.data.studios.DBMediaStudioEntity
 import my.projects.seasonalanimetracker.db.data.studios.DBStudio
+import java.util.*
 
 class DBTestDataProvider {
 
@@ -179,7 +180,7 @@ class DBTestDataProvider {
         )
         val firstScheduleItem = DBScheduleItem(
             1L,
-            1581594495L,
+            Calendar.getInstance().timeInMillis,
             2,
             1L
         )
@@ -245,7 +246,7 @@ class DBTestDataProvider {
         )
         val secondScheduleItem = DBScheduleItem(
             2L,
-            1581596051L,
+            Calendar.getInstance().also { it.add(Calendar.DAY_OF_YEAR, 1) }.timeInMillis,
             6,
             2L
         )
