@@ -29,11 +29,13 @@ class ScheduleViewModel @ViewModelInject constructor (
 
     private var scheduleDisposable = CompositeDisposable()
 
-    private val scheduleLD = MutableLiveData<IScheduleVO>().also {
-        val disposable = scheduleDataSource.getSchedule().subscribe { schedules ->
-            it.postValue(ScheduleVO(schedules))
+    private val scheduleLD: LiveData<IScheduleVO> by lazy {
+        MutableLiveData<IScheduleVO>().also {
+            val disposable = scheduleDataSource.getSchedule().subscribe { schedules ->
+                it.postValue(ScheduleVO(schedules))
+            }
+            scheduleDisposable.add(disposable)
         }
-        scheduleDisposable.add(disposable)
     }
 
     override fun scheduleLD(): LiveData<IScheduleVO> {

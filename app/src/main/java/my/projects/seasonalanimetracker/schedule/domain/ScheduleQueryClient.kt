@@ -59,6 +59,7 @@ class ScheduleQueryClient @Inject constructor(
     ): ApolloCall.Callback<SchedulesQuery.Data>() {
 
         override fun onFailure(e: ApolloException) {
+            Timber.e(e)
             emitter.onError(IOException(e.message))
         }
 

@@ -7,12 +7,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Observable
+import my.projects.seasonalanimetracker.app.testing.Mockable
 import my.projects.seasonalanimetracker.db.MediaDatabase
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItem
 import my.projects.seasonalanimetracker.db.data.schedule.DBScheduleItemEntity
 import javax.inject.Singleton
 
 @Dao
+@Mockable
 abstract class ScheduleDAO: MediaDAO() {
 
     @Query("select * from schedules")
