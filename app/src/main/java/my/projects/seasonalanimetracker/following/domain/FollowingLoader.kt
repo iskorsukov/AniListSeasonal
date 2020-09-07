@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import io.reactivex.Single
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
+import timber.log.Timber
 import javax.inject.Inject
 
 interface IFollowingLoader {
@@ -26,6 +27,8 @@ class FollowingLoader @Inject constructor(
                 seed.addAll(input)
                 seed
             }).map {
+                Timber.i("Filtering ${it.size} items")
+                Timber.i(it.map { "${it.media.titleNative} - ${it.media.season} - ${it.media.seasonYear}" }.joinToString(separator = "\n"))
                 it.filter { item -> item.media.season == season && item.media.seasonYear == seasonYear }
             }
         }

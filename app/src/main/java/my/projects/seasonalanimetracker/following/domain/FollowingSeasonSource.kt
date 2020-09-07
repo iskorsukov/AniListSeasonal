@@ -18,10 +18,10 @@ class FollowingSeasonSource @Inject constructor(): IFollowingSeasonSource {
     override fun getCurrentSeason(): String {
         val seasonIndex = Calendar.getInstance().get(Calendar.MONTH) / 4
         return when (seasonIndex) {
-            0 -> MediaSeason.SPRING.name
-            1 -> MediaSeason.SUMMER.name
-            2 -> MediaSeason.FALL.name
-            3 -> MediaSeason.WINTER.name
+            0 -> MediaSeason.WINTER.name
+            1 -> MediaSeason.SPRING.name
+            2 -> MediaSeason.SUMMER.name
+            3 -> MediaSeason.FALL.name
             else -> throw IndexOutOfBoundsException()
         }
     }

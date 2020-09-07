@@ -4,6 +4,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import my.projects.seasonalanimetracker.following.domain.IFollowingDataSource
 import my.projects.seasonalanimetracker.following.viewobject.FollowingVO
 import my.projects.seasonalanimetracker.following.viewobject.IFollowingVO
@@ -32,4 +36,11 @@ class FollowingViewModel @ViewModelInject constructor(
     override fun updateFollowing() {
         followingDataSource.updateFollowing().subscribe()
     }
+}
+
+@Module
+@InstallIn(FragmentComponent::class)
+abstract class FollowingViewModelModule {
+    @Binds
+    abstract fun bindsFollowingViewModel(followingViewModel: FollowingViewModel): IFollowingViewModel
 }

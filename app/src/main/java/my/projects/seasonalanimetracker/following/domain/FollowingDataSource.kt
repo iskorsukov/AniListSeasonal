@@ -14,6 +14,7 @@ import my.projects.seasonalanimetracker.following.domain.mapper.db.FollowingData
 import my.projects.seasonalanimetracker.following.domain.mapper.db.FollowingEntityToDataMapper
 import my.projects.seasonalanimetracker.following.domain.mapper.query.FollowingQueryToDataMapper
 import my.projects.seasonalanimetracker.schedule.domain.ScheduleDateSource
+import timber.log.Timber
 import javax.inject.Inject
 
 interface IFollowingDataSource {
@@ -31,6 +32,7 @@ class FollowingDataSource @Inject constructor(
 
     override fun getFollowing(): Observable<List<FollowingMediaItem>> {
         return followingDAO.getFollowing().map {
+            Timber.i("Got ${it.size} entities")
             it.map { entityToDataMapper.map(it) }
         }
     }
@@ -47,6 +49,7 @@ class FollowingDataSource @Inject constructor(
 
     private fun storeFollowing(items: List<FollowingMediaItem>): Completable {
         return Completable.fromAction {
+            Timber.i("Storing ${items.size} entities")
             followingDAO.saveFollowingItems(items.map { dataToEntityMapper.map(it) })
         }
     }
