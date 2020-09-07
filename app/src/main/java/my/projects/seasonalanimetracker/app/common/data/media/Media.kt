@@ -14,6 +14,8 @@ data class Media(
     val titleRomaji: String?,
     val titleNative: String?,
     val titleEnglish: String?,
+    val season: String?,
+    val seasonYear: Int?,
     val description: String?,
     val coverImageUrl: String?,
     val bannerImageUrl: String?,

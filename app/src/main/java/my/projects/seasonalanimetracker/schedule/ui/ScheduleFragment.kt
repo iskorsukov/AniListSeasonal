@@ -2,22 +2,15 @@ package my.projects.seasonalanimetracker.schedule.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.get
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
-import kotlinx.android.synthetic.main.fragment_schedule.view.*
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
-import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import my.projects.seasonalanimetracker.schedule.ui.tabs.ScheduleTabViewPagerAdapter
 import my.projects.seasonalanimetracker.schedule.viewmodel.ScheduleViewModel
 import timber.log.Timber
-import java.time.DayOfWeek
 
 @AndroidEntryPoint
 class ScheduleFragment: BaseFragment() {
