@@ -34,7 +34,7 @@ class ScheduleFragment: BaseFragment() {
             Timber.d("Showing ${items.values.flatten().size} items")
 
             if (pager.adapter == null) {
-                pager.adapter = ScheduleTabViewPagerAdapter(parentFragmentManager, items)
+                pager.adapter = ScheduleTabViewPagerAdapter(childFragmentManager, items)
             } else {
                 (pager.adapter!! as ScheduleTabViewPagerAdapter).updateData(items)
             }

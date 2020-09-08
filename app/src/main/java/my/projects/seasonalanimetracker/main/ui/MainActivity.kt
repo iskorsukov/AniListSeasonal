@@ -10,16 +10,19 @@ import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.auth.viewobject.AuthStatus
 import my.projects.seasonalanimetracker.auth.viewobject.IAuthVO
 import my.projects.seasonalanimetracker.following.ui.FollowingFragment
 import my.projects.seasonalanimetracker.main.viewmodel.IMainActivityViewModel
 import my.projects.seasonalanimetracker.main.viewmodel.MainActivityViewModel
+import my.projects.seasonalanimetracker.media.ui.MediaFragment
 import my.projects.seasonalanimetracker.notifications.ui.NotificationsFragment
 import my.projects.seasonalanimetracker.schedule.ui.ScheduleFragment
 
 @AndroidEntryPoint
-class MainActivity: AppCompatActivity() {
+class MainActivity: AppCompatActivity(), OnMediaItemClickListener {
 
     private lateinit var toolbar: ActionBar
 
@@ -80,6 +83,13 @@ class MainActivity: AppCompatActivity() {
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
+        transaction.commit()
+    }
+
+    override fun onClickMediaItem(media: Media) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, MediaFragment.newInstance(media))
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 }
