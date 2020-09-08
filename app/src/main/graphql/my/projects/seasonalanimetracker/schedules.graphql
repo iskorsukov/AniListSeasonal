@@ -62,6 +62,50 @@ query UnreadNotificationsQuery {
   }
 }
 
+query FollowingPageQuery($userId: Int, $page: Int) {
+  Page(page: $page) {
+    pageInfo {
+    ...PageInfoFragment
+    }
+    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED]) {
+      id
+      status
+        media {
+        ...MediaFragment
+        characters {
+          ...CharacterFragment
+        }
+        staff {
+          ...StaffFragment
+        }
+        studios(isMain: true) {
+          ...StudioFragment
+        }
+        nextAiringEpisode {
+          ...ScheduleFragment
+        }
+      }
+    }
+  }
+}
+
+query FollowingPagesCountQuery($userId: Int) {
+  Page {
+    pageInfo {
+    ...PageInfoFragment
+    }
+    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED]) {
+      id
+    }
+  }
+}
+
+query UserIdQuery {
+  Viewer {
+    id
+  }
+}
+
 fragment PageInfoFragment on PageInfo {
   total
   perPage
@@ -85,6 +129,8 @@ fragment MediaFragment on Media {
     native
     english
   }
+  season
+  seasonYear
   description
   coverImage {
     large

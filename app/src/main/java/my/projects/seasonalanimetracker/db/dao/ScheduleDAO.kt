@@ -31,22 +31,7 @@ abstract class ScheduleDAO: MediaDAO() {
     open fun saveSchedule(schedules: List<DBScheduleItemEntity>) {
         clearSchedules()
         for (schedule in schedules) {
-            for (characterEntity in schedule.mediaEntity.characterEntities) {
-                saveCharacter(characterEntity.character)
-                characterEntity.voiceActor?.let {
-                    saveVoiceActor(it)
-                }
-                saveMediaCharacter(characterEntity.mediaCharacter)
-            }
-            for (staffEntity in schedule.mediaEntity.staffEntities) {
-                saveStaff(staffEntity.staff)
-                saveMediaStaff(staffEntity.mediaStaff)
-            }
-            for (studioEntity in schedule.mediaEntity.studioEntities) {
-                saveStudio(studioEntity.studio)
-                saveMediaStudio(studioEntity.mediaStudio)
-            }
-            saveMedia(schedule.mediaEntity.media)
+            saveMediaEntity(schedule.mediaEntity)
             saveScheduleItem(schedule.scheduleItem)
         }
     }
@@ -56,7 +41,6 @@ abstract class ScheduleDAO: MediaDAO() {
 @InstallIn(ApplicationComponent::class)
 class ScheduleDAOModule {
     @Provides
-    @Singleton
     fun providesScheduleDao(db: MediaDatabase): ScheduleDAO {
         return db.scheduleDao()
     }

@@ -10,6 +10,8 @@ data class DBMedia(
     val type: String,
     val format: String,
     @Embedded val title: MediaTitle?,
+    val season: String?,
+    val seasonYear: Int?,
     val description: String?,
     val coverImageUrl: String?,
     val bannerImageUrl: String?,

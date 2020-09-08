@@ -11,6 +11,7 @@ import my.projects.seasonalanimetracker.db.data.characters.DBCharacter
 import my.projects.seasonalanimetracker.db.data.characters.DBMediaCharacter
 import my.projects.seasonalanimetracker.db.data.characters.DBVoiceActor
 import my.projects.seasonalanimetracker.db.data.media.DBMedia
+import my.projects.seasonalanimetracker.db.data.media.DBMediaEntity
 import my.projects.seasonalanimetracker.db.data.staff.DBMediaStaff
 import my.projects.seasonalanimetracker.db.data.staff.DBStaff
 import my.projects.seasonalanimetracker.db.data.studios.DBMediaStudio
@@ -43,13 +44,32 @@ abstract class MediaDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract fun saveMedia(media: DBMedia)
+
+    @Transaction
+    protected open fun saveMediaEntity(mediaEntity: DBMediaEntity) {
+        for (characterEntity in mediaEntity.characterEntities) {
+            saveCharacter(characterEntity.character)
+            characterEntity.voiceActor?.let {
+                saveVoiceActor(it)
+            }
+            saveMediaCharacter(characterEntity.mediaCharacter)
+        }
+        for (staffEntity in mediaEntity.staffEntities) {
+            saveStaff(staffEntity.staff)
+            saveMediaStaff(staffEntity.mediaStaff)
+        }
+        for (studioEntity in mediaEntity.studioEntities) {
+            saveStudio(studioEntity.studio)
+            saveMediaStudio(studioEntity.mediaStudio)
+        }
+        saveMedia(mediaEntity.media)
+    }
 }
 
 @Module
 @InstallIn(ApplicationComponent::class)
 class MediaDAOModule {
     @Provides
-    @Singleton
     fun providesMediaDao(db: MediaDatabase): MediaDAO {
         return db.mediaDao()
     }

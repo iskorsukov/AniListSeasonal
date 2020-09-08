@@ -32,22 +32,7 @@ abstract class NotificationsDAO: MediaDAO() {
     @Transaction
     open fun saveNotifications(notifications: List<DBNotificationItemEntity>) {
         for (notification in notifications) {
-            for (characterEntity in notification.mediaEntity.characterEntities) {
-                saveCharacter(characterEntity.character)
-                characterEntity.voiceActor?.let {
-                    saveVoiceActor(it)
-                }
-                saveMediaCharacter(characterEntity.mediaCharacter)
-            }
-            for (staffEntity in notification.mediaEntity.staffEntities) {
-                saveStaff(staffEntity.staff)
-                saveMediaStaff(staffEntity.mediaStaff)
-            }
-            for (studioEntity in notification.mediaEntity.studioEntities) {
-                saveStudio(studioEntity.studio)
-                saveMediaStudio(studioEntity.mediaStudio)
-            }
-            saveMedia(notification.mediaEntity.media)
+            saveMediaEntity(notification.mediaEntity)
             saveNotificationItem(notification.notificationItem)
         }
     }
@@ -57,7 +42,6 @@ abstract class NotificationsDAO: MediaDAO() {
 @InstallIn(ApplicationComponent::class)
 class NotificationsDAOModule {
     @Provides
-    @Singleton
     fun providesNotificationDao(db: MediaDatabase): NotificationsDAO {
         return db.notificationsDao()
     }

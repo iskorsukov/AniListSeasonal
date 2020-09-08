@@ -32,6 +32,8 @@ class ScheduleQueryToDataMapper @Inject constructor() {
                 title?.romaji,
                 title?.native_,
                 title?.english,
+                season.toString(),
+                seasonYear,
                 description,
                 coverImage?.large,
                 bannerImage,
