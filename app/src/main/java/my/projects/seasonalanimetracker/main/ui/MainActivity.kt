@@ -10,19 +10,25 @@ import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.data.characters.MediaCharacter
 import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.data.staff.MediaStaff
+import my.projects.seasonalanimetracker.app.common.ui.OnCharactersExpandClickListener
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.OnStaffExpandClickListener
 import my.projects.seasonalanimetracker.auth.viewobject.AuthStatus
 import my.projects.seasonalanimetracker.auth.viewobject.IAuthVO
 import my.projects.seasonalanimetracker.following.ui.FollowingFragment
 import my.projects.seasonalanimetracker.main.viewmodel.IMainActivityViewModel
 import my.projects.seasonalanimetracker.main.viewmodel.MainActivityViewModel
 import my.projects.seasonalanimetracker.media.ui.MediaFragment
+import my.projects.seasonalanimetracker.media.ui.item.character.CharactersFragment
+import my.projects.seasonalanimetracker.media.ui.item.staff.StaffFragment
 import my.projects.seasonalanimetracker.notifications.ui.NotificationsFragment
 import my.projects.seasonalanimetracker.schedule.ui.ScheduleFragment
 
 @AndroidEntryPoint
-class MainActivity: AppCompatActivity(), OnMediaItemClickListener {
+class MainActivity: AppCompatActivity(), OnMediaItemClickListener, OnCharactersExpandClickListener, OnStaffExpandClickListener {
 
     private lateinit var toolbar: ActionBar
 
@@ -80,16 +86,24 @@ class MainActivity: AppCompatActivity(), OnMediaItemClickListener {
         bottomNavigation.visibility = View.GONE
     }
 
-    private fun openFragment(fragment: Fragment) {
+    private fun openFragment(fragment: Fragment, onBackStack: Boolean = false) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
+        if (onBackStack) {
+            transaction.addToBackStack(null)
+        }
         transaction.commit()
     }
 
     override fun onClickMediaItem(media: Media) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, MediaFragment.newInstance(media))
-        transaction.addToBackStack(null)
-        transaction.commit()
+        openFragment(MediaFragment.newInstance(media), true)
+    }
+
+    override fun showMoreCharacters(characters: List<MediaCharacter>) {
+        openFragment(CharactersFragment.newInstance(characters), true)
+    }
+
+    override fun showMoreStaff(staff: List<MediaStaff>) {
+        openFragment(StaffFragment.newInstance(staff), true)
     }
 }

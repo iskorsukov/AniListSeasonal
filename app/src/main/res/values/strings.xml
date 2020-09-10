@@ -9,4 +9,15 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_following">Following</string>
+
+    <!-- Media -->
+    <string name="characters">Characters</string>
+    <string name="staff">Staff</string>
+    <string name="season">Season</string>
+    <string name="episodes">Episodes</string>
+    <string name="genres">Genres</string>
+    <string name="studios">Studios</string>
+    <string name="avg_score">Average score</string>
+    <string name="mean_score">Mean score</string>
+    <string name="show_more">Show more</string>
 </resources>

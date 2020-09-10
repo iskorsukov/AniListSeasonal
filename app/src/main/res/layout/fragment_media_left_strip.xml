@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/season_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/season"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/season"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/season_label"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/episodes_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/episodes"
+        app:layout_constraintTop_toBottomOf="@id/season"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/episodes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/episodes_label"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/genres_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/genres"
+        app:layout_constraintTop_toBottomOf="@id/episodes"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/genres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/genres_label"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/avg_score_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/avg_score"
+        app:layout_constraintTop_toBottomOf="@id/genres"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/avg_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/avg_score_label"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/mean_score_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mean_score"
+        app:layout_constraintTop_toBottomOf="@id/avg_score"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/mean_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/mean_score_label"
+        android:layout_marginTop="4dp" />
+    <TextView
+        android:id="@+id/studios_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/studios"
+        app:layout_constraintTop_toBottomOf="@id/mean_score"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/studios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/studios_label"
+        android:layout_marginTop="4dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
