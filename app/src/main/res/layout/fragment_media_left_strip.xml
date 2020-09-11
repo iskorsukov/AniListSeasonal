@@ -1,115 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/season_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/season"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp" />
+    <data>
+        <import type="android.view.View"/>
+        <import type="my.projects.seasonalanimetracker.app.common.data.media.MediaDataUtil" />
 
-    <TextView
-        android:id="@+id/season"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/season_label"
-        android:layout_marginTop="4dp" />
+        <variable
+            name="media"
+            type="my.projects.seasonalanimetracker.app.common.data.media.Media" />
+    </data>
 
-    <TextView
-        android:id="@+id/episodes_label"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/episodes"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/season"
-        android:layout_marginTop="8dp" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/episodes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/episodes_label"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/season_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/season"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{(media.season == null &amp;&amp; media.seasonYear == null) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/genres_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/genres"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/episodes"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/season"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{(media.season == null &amp;&amp; media.seasonYear == null) ? View.GONE : View.VISIBLE}"
+            android:text="@{media.season + ' ' + media.seasonYear}"
+            app:layout_constraintTop_toBottomOf="@id/season_label"
+            android:layout_marginTop="4dp" />
 
-    <TextView
-        android:id="@+id/genres"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/genres_label"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/episodes_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/episodes"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.episodes == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/season"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/avg_score_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/avg_score"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/genres"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/episodes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.episodes == null ? View.GONE : View.VISIBLE}"
+            android:text="@{String.valueOf(media.episodes)}"
+            app:layout_constraintTop_toBottomOf="@id/episodes_label"
+            android:layout_marginTop="4dp" />
 
-    <TextView
-        android:id="@+id/avg_score"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/avg_score_label"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/genres_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/genres"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.genres == null || media.genres.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/episodes"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/mean_score_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/mean_score"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/avg_score"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.genres == null || media.genres.empty ? View.GONE : View.VISIBLE}"
+            android:text="@{media.genres}"
+            app:layout_constraintTop_toBottomOf="@id/genres_label"
+            android:layout_marginTop="4dp" />
 
-    <TextView
-        android:id="@+id/mean_score"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/mean_score_label"
-        android:layout_marginTop="4dp" />
-    <TextView
-        android:id="@+id/studios_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/studios"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/mean_score"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/avg_score_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/avg_score"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.averageScore == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/genres"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/studios"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintTop_toBottomOf="@id/studios_label"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/avg_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.averageScore == null ? View.GONE : View.VISIBLE}"
+            android:text="@{String.valueOf(media.averageScore.intValue())}"
+            app:layout_constraintTop_toBottomOf="@id/avg_score_label"
+            android:layout_marginTop="4dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/mean_score_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mean_score"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.meanScore == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/avg_score"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/mean_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.meanScore == null ? View.GONE : View.VISIBLE}"
+            android:text="@{String.valueOf(media.meanScore.intValue())}"
+            app:layout_constraintTop_toBottomOf="@id/mean_score_label"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/studios_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/studios"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.studios.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/mean_score"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/studios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextWhite"
+            android:visibility="@{media.studios.empty ? View.GONE : View.VISIBLE}"
+            android:text='@{MediaDataUtil.INSTANCE.studiosToString(media)}'
+            app:layout_constraintTop_toBottomOf="@id/studios_label"
+            android:layout_marginTop="4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
