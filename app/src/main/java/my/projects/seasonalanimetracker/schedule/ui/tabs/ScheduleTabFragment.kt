@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_schedule_tab.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import my.projects.seasonalanimetracker.schedule.ui.item.ScheduleRecyclerViewAdapter
 import java.time.DayOfWeek
@@ -28,7 +30,12 @@ class ScheduleTabFragment: Fragment() {
         }
     }
 
-    private val adapter = ScheduleRecyclerViewAdapter()
+    private lateinit var adapter: ScheduleRecyclerViewAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = ScheduleRecyclerViewAdapter(requireActivity() as OnMediaItemClickListener)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

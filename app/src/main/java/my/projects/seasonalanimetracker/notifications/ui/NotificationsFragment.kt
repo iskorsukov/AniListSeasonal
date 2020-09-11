@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.notifications.ui.item.NotificationsRecyclerViewAdapter
 import my.projects.seasonalanimetracker.notifications.ui.item.NotificationsRecyclerViewPagedAdapter
@@ -19,7 +20,7 @@ class NotificationsFragment: BaseFragment() {
 
     private val viewModel: NotificationViewModel by viewModels()
 
-    private val adapter = NotificationsRecyclerViewPagedAdapter()
+    private lateinit var adapter: NotificationsRecyclerViewPagedAdapter
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_notifications
@@ -27,6 +28,7 @@ class NotificationsFragment: BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adapter = NotificationsRecyclerViewPagedAdapter(requireActivity() as OnMediaItemClickListener)
         viewModel.updateNotifications() // TODO figure out a better update scheme
     }
 

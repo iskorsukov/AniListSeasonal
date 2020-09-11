@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_following.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.following.ui.item.FollowingRecyclerViewAdapter
 import my.projects.seasonalanimetracker.following.viewmodel.FollowingViewModel
@@ -17,7 +18,7 @@ import timber.log.Timber
 class FollowingFragment: BaseFragment() {
 
     private val viewModel: FollowingViewModel by viewModels()
-    private val adapter = FollowingRecyclerViewAdapter()
+    private lateinit var adapter: FollowingRecyclerViewAdapter
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_following
@@ -25,6 +26,7 @@ class FollowingFragment: BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adapter = FollowingRecyclerViewAdapter(requireActivity() as OnMediaItemClickListener)
         viewModel.updateFollowing()
     }
 
