@@ -44,7 +44,7 @@ class AuthActivity: AppCompatActivity() {
         })
     }
 
-    fun login(v: View) {
+    fun login() {
         val loginIntent = Intent(Intent.ACTION_VIEW).also {
             it.addCategory(Intent.CATEGORY_BROWSABLE)
             it.data = Uri.parse("https://anilist.co/api/v2/oauth/authorize?client_id=3152&response_type=token")
@@ -52,7 +52,7 @@ class AuthActivity: AppCompatActivity() {
         startActivity(loginIntent)
     }
 
-    fun loginAsGuest(v: View) {
+    fun loginAsGuest() {
         startActivity(Intent(applicationContext, MainActivity::class.java))
         finish()
     }

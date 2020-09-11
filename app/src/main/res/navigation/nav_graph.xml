@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/scheduleFragment">
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="my.projects.seasonalanimetracker.schedule.ui.ScheduleFragment"
+        android:label="ScheduleFragment" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="my.projects.seasonalanimetracker.notifications.ui.NotificationsFragment"
+        android:label="NotificationsFragment" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followingFragment"
+        android:name="my.projects.seasonalanimetracker.following.ui.FollowingFragment"
+        android:label="FollowingFragment" >
+        <action
+            android:id="@+id/action_followingFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="my.projects.seasonalanimetracker.media.ui.MediaFragment"
+        android:label="MediaFragment" >
+        <action
+            android:id="@+id/action_mediaFragment_to_charactersFragment"
+            app:destination="@id/charactersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_mediaFragment_to_staffFragment"
+            app:destination="@id/staffFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/to_right" />
+        <argument
+            android:name="media"
+            app:argType="my.projects.seasonalanimetracker.app.common.data.media.Media" />
+    </fragment>
+    <fragment
+        android:id="@+id/charactersFragment"
+        android:name="my.projects.seasonalanimetracker.media.ui.item.character.CharactersFragment"
+        android:label="CharactersFragment" >
+        <argument
+            android:name="charactersList"
+            app:argType="my.projects.seasonalanimetracker.media.ui.item.character.MediaCharactersSerializable" />
+    </fragment>
+    <fragment
+        android:id="@+id/staffFragment"
+        android:name="my.projects.seasonalanimetracker.media.ui.item.staff.StaffFragment"
+        android:label="StaffFragment" >
+        <argument
+            android:name="staffList"
+            app:argType="my.projects.seasonalanimetracker.media.ui.item.staff.MediaStaffSerializable" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_notificationsFragment"
+        app:destination="@id/notificationsFragment"
+        app:popUpTo="@id/scheduleFragment"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_scheduleFragment"
+        app:destination="@id/scheduleFragment"
+        app:popUpTo="@id/scheduleFragment"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_followingFragment"
+        app:destination="@id/followingFragment"
+        app:popUpTo="@id/scheduleFragment"
+        app:popUpToInclusive="true" />
+</navigation>

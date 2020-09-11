@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_following.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.data.media.Media
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.following.ui.item.FollowingRecyclerViewAdapter
@@ -15,7 +17,7 @@ import my.projects.seasonalanimetracker.following.viewmodel.FollowingViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class FollowingFragment: BaseFragment() {
+class FollowingFragment: BaseFragment(), OnMediaItemClickListener {
 
     private val viewModel: FollowingViewModel by viewModels()
     private lateinit var adapter: FollowingRecyclerViewAdapter
@@ -26,7 +28,7 @@ class FollowingFragment: BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = FollowingRecyclerViewAdapter(requireActivity() as OnMediaItemClickListener)
+        adapter = FollowingRecyclerViewAdapter(this)
         viewModel.updateFollowing()
     }
 
@@ -36,9 +38,13 @@ class FollowingFragment: BaseFragment() {
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = adapter
 
-        viewModel.followingLD().observe(viewLifecycleOwner, Observer { followingVO ->
+        viewModel.followingLD().observe(viewLifecycleOwner) { followingVO ->
             Timber.i("Showing ${followingVO.getItems().size} entities")
             adapter.submitList(followingVO.getItems())
-        })
+        }
+    }
+
+    override fun onClickMediaItem(media: Media) {
+        findNavController().navigate(FollowingFragmentDirections.actionFollowingFragmentToMediaFragment(media))
     }
 }

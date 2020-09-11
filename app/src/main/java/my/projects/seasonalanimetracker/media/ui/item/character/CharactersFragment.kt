@@ -2,6 +2,7 @@ package my.projects.seasonalanimetracker.media.ui.item.character
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_characters.*
 import my.projects.seasonalanimetracker.R
@@ -10,15 +11,7 @@ import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 
 class CharactersFragment: BaseFragment() {
 
-    companion object {
-        fun newInstance(characters: List<MediaCharacter>): CharactersFragment {
-            return CharactersFragment().also {
-                it.arguments = Bundle().also {
-                    it.putSerializable("characters", ArrayList(characters))
-                }
-            }
-        }
-    }
+    private val args by navArgs<CharactersFragmentArgs>()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_characters
@@ -27,11 +20,11 @@ class CharactersFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val characters = args.charactersList.character
+
         characters_recycler.layoutManager = LinearLayoutManager(context)
         characters_recycler.adapter = CharactersRecyclerViewAdapter(true).also { adapter ->
-            (arguments?.getSerializable("characters") as List<MediaCharacter>?)?.let {
-                adapter.submitList(it)
-            }
+            adapter.submitList(characters)
         }
     }
 }

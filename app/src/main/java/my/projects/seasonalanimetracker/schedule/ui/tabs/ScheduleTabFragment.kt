@@ -34,7 +34,7 @@ class ScheduleTabFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = ScheduleRecyclerViewAdapter(requireActivity() as OnMediaItemClickListener)
+        adapter = ScheduleRecyclerViewAdapter(requireParentFragment() as OnMediaItemClickListener)
     }
 
     override fun onCreateView(
