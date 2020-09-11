@@ -32,10 +32,18 @@
         android:label="MediaFragment" >
         <action
             android:id="@+id/action_mediaFragment_to_charactersFragment"
-            app:destination="@id/charactersFragment" />
+            app:destination="@id/charactersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mediaFragment_to_staffFragment"
-            app:destination="@id/staffFragment" />
+            app:destination="@id/staffFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/to_right" />
         <argument
             android:name="media"
             app:argType="my.projects.seasonalanimetracker.app.common.data.media.Media" />
