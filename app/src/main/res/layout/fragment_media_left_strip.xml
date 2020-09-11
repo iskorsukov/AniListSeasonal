@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/season"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp" />
 
@@ -17,6 +19,7 @@
         android:id="@+id/season"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/season_label"
         android:layout_marginTop="4dp" />
 
@@ -25,6 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/episodes"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/season"
         android:layout_marginTop="8dp" />
 
@@ -32,6 +37,7 @@
         android:id="@+id/episodes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/episodes_label"
         android:layout_marginTop="4dp" />
 
@@ -40,6 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/genres"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/episodes"
         android:layout_marginTop="8dp" />
 
@@ -47,6 +55,7 @@
         android:id="@+id/genres"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/genres_label"
         android:layout_marginTop="4dp" />
 
@@ -55,6 +64,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/avg_score"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/genres"
         android:layout_marginTop="8dp" />
 
@@ -62,6 +73,7 @@
         android:id="@+id/avg_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/avg_score_label"
         android:layout_marginTop="4dp" />
 
@@ -70,6 +82,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/mean_score"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/avg_score"
         android:layout_marginTop="8dp" />
 
@@ -77,6 +91,7 @@
         android:id="@+id/mean_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/mean_score_label"
         android:layout_marginTop="4dp" />
     <TextView
@@ -84,6 +99,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/studios"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/mean_score"
         android:layout_marginTop="8dp" />
 
@@ -91,6 +108,7 @@
         android:id="@+id/studios"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintTop_toBottomOf="@id/studios_label"
         android:layout_marginTop="4dp" />
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,26 +28,26 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintGuide_begin="16dp" />
+                app:layout_constraintGuide_begin="8dp" />
 
             <View
                 android:id="@+id/banner_cover_bumper"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="70dp"
-                app:layout_constraintTop_toTopOf="@id/banner" />
+                android:layout_marginBottom="70dp"
+                app:layout_constraintBottom_toBottomOf="@id/banner" />
 
             <View
                 android:id="@+id/banner_base"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                app:layout_constraintTop_toBottomOf="@id/banner" />
+                app:layout_constraintTop_toTopOf="@id/banner" />
 
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/cover_barrier"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:barrierDirection="top"
+                app:barrierDirection="bottom"
                 app:constraint_referenced_ids="banner_cover_bumper, banner_base" />
 
             <ImageView
@@ -54,6 +55,7 @@
                 android:layout_width="120dp"
                 android:layout_height="180dp"
                 android:scaleType="centerCrop"
+                android:elevation="4dp"
                 app:layout_constraintStart_toStartOf="@id/left_side_guideline"
                 app:layout_constraintTop_toBottomOf="@id/cover_barrier"
                 android:layout_marginTop="16dp"/>
@@ -72,12 +74,20 @@
                 layout="@layout/fragment_media_right_strip"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 app:layout_constraintStart_toEndOf="@id/cover"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/banner"
-                android:layout_margin="16dp"/>
+                app:layout_constraintTop_toBottomOf="@id/banner"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/right_strip"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/right_strip"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@color/colorTextWhite" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

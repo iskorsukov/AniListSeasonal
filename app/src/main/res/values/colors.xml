@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8120DE</color>
-    <color name="colorPrimaryDark">#510699</color>
-    <color name="colorAccent">#E312B5</color>
-    <color name="bottomNavigationBG">#402DE0</color>
+    <color name="colorPrimary">#2D359B</color>
+    <color name="colorPrimaryLight">#6A70BE</color>
+    <color name="colorPrimaryDark">#0D1362</color>
+    <color name="colorPrimaryDarkLight">#1B227D</color>
+    <color name="colorAccent">#DFAE27</color>
+
+    <color name="bottomNavigationBG">@color/colorPrimary</color>
+
+    <color name="colorTextBlack">#000000</color>
+    <color name="colorTextWhite">#FFFFFF</color>
+    <color name="colorTextGray">#5A5A5A</color>
+    <color name="colorTextLightGray">#959595</color>
 </resources>

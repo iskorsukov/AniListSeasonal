@@ -2,7 +2,9 @@ package my.projects.seasonalanimetracker.media.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Html
 import android.view.View
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_media.*
@@ -58,7 +60,7 @@ class MediaFragment: BaseFragment() {
 
         Glide.with(view).load(media.coverImageUrl).into(cover)
         title.text = media.titleEnglish ?: media.titleRomaji ?: media.titleNative
-        description.text = media.description
+        description.text = HtmlCompat.fromHtml(media.description ?: "", 0).toString()
 
         if (media.season == null && media.seasonYear == null) {
             season_label.visibility = View.GONE
@@ -137,10 +139,5 @@ class MediaFragment: BaseFragment() {
                 }
             }
         }
-
-        Timber.i("${media.titleNative} - ${media.titleRomaji} - ${media.titleEnglish}")
-        Timber.i("${media.description}")
-        Timber.i("${media.episodes}")
-        Timber.i("${media.genres}")
     }
 }
