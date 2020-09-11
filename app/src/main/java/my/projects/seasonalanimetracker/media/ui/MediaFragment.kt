@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.text.Html
 import android.view.View
 import androidx.core.text.HtmlCompat
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_media.*
@@ -16,20 +18,12 @@ import my.projects.seasonalanimetracker.app.common.ui.OnCharactersExpandClickLis
 import my.projects.seasonalanimetracker.app.common.ui.OnStaffExpandClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.media.ui.item.character.CharactersRecyclerViewAdapter
+import my.projects.seasonalanimetracker.media.ui.item.character.MediaCharactersSerializable
+import my.projects.seasonalanimetracker.media.ui.item.staff.MediaStaffSerializable
 import my.projects.seasonalanimetracker.media.ui.item.staff.StaffRecyclerViewAdapter
 import timber.log.Timber
 
 class MediaFragment: BaseFragment() {
-
-    companion object {
-        fun newInstance(media: Media): MediaFragment {
-            return MediaFragment().also {
-                it.arguments = Bundle().also {
-                    it.putSerializable("media", media)
-                }
-            }
-        }
-    }
 
     private class NoScrollLinearLayoutManager(context: Context): LinearLayoutManager(context) {
         override fun canScrollVertically(): Boolean {
@@ -44,13 +38,16 @@ class MediaFragment: BaseFragment() {
     private val charactersAdapter = CharactersRecyclerViewAdapter()
     private val staffAdapter = StaffRecyclerViewAdapter()
 
+    private val args by navArgs<MediaFragmentArgs>()
+
     override fun getLayoutId(): Int {
         return R.layout.fragment_media
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val media = requireArguments().getSerializable("media") as Media
+
+        val media = args.media
 
         if (media.bannerImageUrl != null) {
             Glide.with(view).load(media.bannerImageUrl).into(banner)
@@ -117,7 +114,9 @@ class MediaFragment: BaseFragment() {
             } else {
                 charactersAdapter.submitList(media.character.subList(0, 2))
                 characters_show_more.setOnClickListener {
-                    (requireActivity() as OnCharactersExpandClickListener).showMoreCharacters(media.character)
+                    findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToCharactersFragment(
+                        MediaCharactersSerializable(ArrayList(media.character))
+                    ))
                 }
             }
         }
@@ -135,7 +134,9 @@ class MediaFragment: BaseFragment() {
             } else {
                 staffAdapter.submitList(media.staff.subList(0, 2))
                 staff_show_more.setOnClickListener {
-                    (requireActivity() as OnStaffExpandClickListener).showMoreStaff(media.staff)
+                    findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToStaffFragment(
+                        MediaStaffSerializable(ArrayList(media.staff))
+                    ))
                 }
             }
         }

@@ -27,7 +27,7 @@ class NotificationViewModel @ViewModelInject constructor(
 
     private val notificationsLD = MutableLiveData<INotificationsVO>().also {
          val disposable = notificationsDataSource.getNotifications().map {
-            PagedNotificationsVO(it) as INotificationsVO
+            PagedNotificationsVO(it)
         }.subscribe { notificationsVO -> it.postValue(notificationsVO) }
         notificationsDisposable.add(disposable)
     }
