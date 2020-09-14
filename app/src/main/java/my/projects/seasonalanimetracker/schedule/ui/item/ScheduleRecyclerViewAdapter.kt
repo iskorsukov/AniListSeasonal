@@ -6,14 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.databinding.ItemScheduleBinding
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import java.time.DayOfWeek
 
 class ScheduleRecyclerViewAdapter(private val mediaItemClickListener: OnMediaItemClickListener): ListAdapter<ScheduleMediaItem, ScheduleItemViewHolder>(ScheduleDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedule, parent, false)
-        return ScheduleItemViewHolder(view)
+        val binding = ItemScheduleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ScheduleItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ScheduleItemViewHolder, position: Int) {

@@ -1,6 +1,7 @@
 package my.projects.seasonalanimetracker.app.common.databinding
 
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ListAdapter
@@ -14,6 +15,8 @@ import my.projects.seasonalanimetracker.media.ui.item.character.CharactersRecycl
 import my.projects.seasonalanimetracker.media.ui.item.character.MediaCharacterViewHolder
 import my.projects.seasonalanimetracker.media.ui.item.character.MediaCharactersSerializable
 import my.projects.seasonalanimetracker.media.ui.item.staff.MediaStaffViewHolder
+import java.text.DateFormat
+import java.util.*
 
 @BindingAdapter("imageUrl")
 fun bindImageUrl(imageView: ImageView, imageUrl: String?) {
@@ -44,4 +47,29 @@ fun bindStaffList(staffRecycler: RecyclerView, staff: List<MediaStaff>) {
             charactersAdapter.submitList(staff.subList(0, 2))
         }
     }
+}
+
+@BindingAdapter("airingAt", "episode")
+fun bindAiringString(view: TextView, airingAt: Long, episode: Int?) {
+    val airingBuilder = StringBuilder()
+
+    airingBuilder.append("Ep ")
+    if (episode != null) {
+        airingBuilder.append("$episode ")
+    }
+
+    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(airingAt))
+    if (airingAt < System.currentTimeMillis()) {
+        airingBuilder.append("aired at $formattedTime")
+    } else {
+        airingBuilder.append("airing at $formattedTime")
+    }
+
+    view.text = airingBuilder.toString()
+}
+
+@BindingAdapter("formattedTime")
+fun bindFormattedTime(view: TextView, time: Long) {
+    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
+    view.text = formattedTime
 }

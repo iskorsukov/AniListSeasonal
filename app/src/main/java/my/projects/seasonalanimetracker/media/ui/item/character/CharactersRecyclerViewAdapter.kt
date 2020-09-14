@@ -4,18 +4,30 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.data.characters.MediaCharacter
+import my.projects.seasonalanimetracker.databinding.ItemCharacterBinding
+import my.projects.seasonalanimetracker.databinding.ItemCharacterExpandedBinding
 
-class CharactersRecyclerViewAdapter(private val expanded: Boolean = false):
+class CharactersRecyclerViewAdapter:
     ListAdapter<MediaCharacter, MediaCharacterViewHolder>(MediaCharacterDiffUtilCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaCharacterViewHolder {
-        val layoutId = if (expanded) R.layout.item_character_expanded else R.layout.item_character
-        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return MediaCharacterViewHolder(view)
+        val binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MediaCharacterViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MediaCharacterViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+
+class CharactersExtendedRecyclerViewAdapter:
+    ListAdapter<MediaCharacter, MediaCharacterExtendedViewHolder>(MediaCharacterDiffUtilCallback()) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaCharacterExtendedViewHolder {
+        val binding = ItemCharacterExpandedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MediaCharacterExtendedViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: MediaCharacterExtendedViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }

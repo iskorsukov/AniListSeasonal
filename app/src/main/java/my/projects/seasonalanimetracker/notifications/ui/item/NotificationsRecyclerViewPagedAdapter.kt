@@ -7,6 +7,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.databinding.ItemNotificationBinding
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
 import timber.log.Timber
 
@@ -14,14 +15,18 @@ class NotificationsRecyclerViewPagedAdapter(private val mediaItemClickListener: 
     : PagedListAdapter<NotificationMediaItem, NotificationItemViewHolder>(NotificationDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationItemViewHolder {
-        return NotificationItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_notification, parent, false))
+        val binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NotificationItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NotificationItemViewHolder, position: Int) {
-        holder.bind(getItem(position))
-        holder.itemView.setOnClickListener {
-            getItem(position)?.let {
-                mediaItemClickListener.onClickMediaItem(it.media)
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
+            holder.itemView.setOnClickListener {
+                getItem(position)?.let {
+                    mediaItemClickListener.onClickMediaItem(it.media)
+                }
             }
         }
     }

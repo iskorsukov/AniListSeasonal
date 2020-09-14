@@ -3,14 +3,14 @@ package my.projects.seasonalanimetracker.notifications.ui.item
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.databinding.ItemNotificationBinding
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
 
 class NotificationsRecyclerViewAdapter(private val items: List<NotificationMediaItem>): RecyclerView.Adapter<NotificationItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_notification, parent, false)
-        return NotificationItemViewHolder(view)
+        val binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NotificationItemViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
