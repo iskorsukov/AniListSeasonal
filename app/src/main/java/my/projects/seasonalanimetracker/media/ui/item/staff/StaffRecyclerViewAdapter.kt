@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import my.projects.seasonalanimetracker.R
-import my.projects.seasonalanimetracker.app.common.data.characters.MediaCharacter
 import my.projects.seasonalanimetracker.app.common.data.staff.MediaStaff
+import my.projects.seasonalanimetracker.databinding.ItemStaffBinding
 
 class StaffRecyclerViewAdapter: ListAdapter<MediaStaff, MediaStaffViewHolder>(MediaStaffDiffUtilCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaStaffViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_staff, parent, false)
-        return MediaStaffViewHolder(view)
+        val binding = ItemStaffBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MediaStaffViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MediaStaffViewHolder, position: Int) {

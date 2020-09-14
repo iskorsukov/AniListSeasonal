@@ -1,83 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorTextWhite"
-    android:padding="8dp"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/title"
+    <data>
+        <import type="android.view.View"/>
+        <import type="androidx.core.text.HtmlCompat" />
+
+        <variable
+            name="media"
+            type="my.projects.seasonalanimetracker.app.common.data.media.Media" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:textColor="@color/colorTextBlack"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="ReZero"/>
+        android:background="@color/colorTextWhite"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@color/colorTextGray"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="@color/colorTextBlack"
+            android:text="@{media.titleEnglish ?? media.titleRomaji ?? media.titleNative}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ReZero"/>
 
-    <TextView
-        android:id="@+id/characters_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/characters"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextGray"
-        app:layout_constraintTop_toBottomOf="@id/description"
-        android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorTextGray"
+            android:text='@{media.description == null ? "" : HtmlCompat.fromHtml(media.description, 0)}'
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:layout_marginTop="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/characters_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/characters_label"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/characters_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/characters"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextGray"
+            android:visibility="@{media.character.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            android:layout_marginTop="16dp"/>
 
-    <TextView
-        android:id="@+id/characters_show_more"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:text="@string/show_more"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/characters_recycler"
-        android:gravity="center" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/characters_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            charactersList="@{media.character}"
+            android:visibility="@{media.character.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/characters_label"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/staff_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/staff"
-        android:textStyle="bold"
-        android:textColor="@color/colorTextGray"
-        app:layout_constraintTop_toBottomOf="@id/characters_show_more"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/characters_show_more"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="@string/show_more"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:visibility="@{media.character.empty || (!media.character.empty &amp;&amp; media.character.size() &lt;= 2) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/characters_recycler"
+            android:gravity="center" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/staff_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/staff_label"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/staff_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/staff"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextGray"
+            android:visibility="@{media.staff.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/characters_show_more"
+            android:layout_marginTop="16dp" />
 
-    <TextView
-        android:id="@+id/staff_show_more"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:text="@string/show_more"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/staff_recycler"
-        android:gravity="center" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/staff_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            staffList="@{media.staff}"
+            android:visibility="@{media.staff.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/staff_label"
+            android:layout_marginTop="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/staff_show_more"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="@string/show_more"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:visibility="@{media.staff.empty || (!media.staff.empty &amp;&amp; media.staff.size() &lt;= 2) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/staff_recycler"
+            android:gravity="center" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

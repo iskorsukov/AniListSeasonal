@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.databinding.ItemFollowingBinding
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 
 class FollowingRecyclerViewAdapter(private val mediaItemClickListener: OnMediaItemClickListener) : ListAdapter<FollowingMediaItem, FollowingItemViewHolder>(FollowingDiffUtilCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowingItemViewHolder {
-        return FollowingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_following, parent, false))
+        val binding = ItemFollowingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FollowingItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FollowingItemViewHolder, position: Int) {
