@@ -47,6 +47,7 @@
             android:text="@string/characters"
             android:textStyle="bold"
             android:textColor="@color/colorTextGray"
+            android:visibility="@{media.character.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/description"
             android:layout_marginTop="16dp"/>
 
@@ -54,6 +55,8 @@
             android:id="@+id/characters_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            charactersList="@{media.character}"
+            android:visibility="@{media.character.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/characters_label"
             android:layout_marginTop="8dp" />
 
@@ -64,6 +67,7 @@
             android:text="@string/show_more"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
+            android:visibility="@{media.character.empty || (!media.character.empty &amp;&amp; media.character.size() &lt;= 2) ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/characters_recycler"
             android:gravity="center" />
 
@@ -74,6 +78,7 @@
             android:text="@string/staff"
             android:textStyle="bold"
             android:textColor="@color/colorTextGray"
+            android:visibility="@{media.staff.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/characters_show_more"
             android:layout_marginTop="16dp" />
 
@@ -81,6 +86,8 @@
             android:id="@+id/staff_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            staffList="@{media.staff}"
+            android:visibility="@{media.staff.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/staff_label"
             android:layout_marginTop="8dp" />
 
@@ -91,6 +98,7 @@
             android:text="@string/show_more"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
+            android:visibility="@{media.staff.empty || (!media.staff.empty &amp;&amp; media.staff.size() &lt;= 2) ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/staff_recycler"
             android:gravity="center" />
 

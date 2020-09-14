@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_media_right_strip.view.*
 import my.projects.seasonalanimetracker.R
+import my.projects.seasonalanimetracker.app.common.data.media.Media
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.databinding.FragmentMediaBinding
 import my.projects.seasonalanimetracker.media.ui.item.character.CharactersRecyclerViewAdapter
@@ -48,52 +49,27 @@ class MediaFragment: BaseFragment() {
             it.media = media
         }
 
-        if (media.bannerImageUrl != null) {
-            Glide.with(view).load(media.bannerImageUrl).into(banner)
-        } else {
-            banner.visibility = View.GONE
+        configureCharactersRecycler(media, view)
+        configureStaffRecycler(media, view)
+    }
+
+    private fun configureCharactersRecycler(media: Media, view: View) {
+        view.characters_recycler.layoutManager = NoScrollLinearLayoutManager(requireContext())
+        view.characters_recycler.adapter = charactersAdapter
+        view.characters_show_more.setOnClickListener {
+            findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToCharactersFragment(
+                MediaCharactersSerializable(ArrayList(media.character))
+            ))
         }
+    }
 
-        Glide.with(view).load(media.coverImageUrl).into(cover)
-
-        if (media.character.isEmpty()) {
-            view.characters_label.visibility = View.GONE
-            view.characters_recycler.visibility = View.GONE
-            view.characters_show_more.visibility = View.GONE
-        } else {
-            view.characters_recycler.layoutManager = NoScrollLinearLayoutManager(requireContext())
-            view.characters_recycler.adapter = charactersAdapter
-            if (media.character.size <= 2) {
-                charactersAdapter.submitList(media.character)
-                view.characters_show_more.visibility = View.GONE
-            } else {
-                charactersAdapter.submitList(media.character.subList(0, 2))
-                view.characters_show_more.setOnClickListener {
-                    findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToCharactersFragment(
-                        MediaCharactersSerializable(ArrayList(media.character))
-                    ))
-                }
-            }
-        }
-
-        if (media.staff.isEmpty()) {
-            view.staff_label.visibility = View.GONE
-            view.staff_recycler.visibility = View.GONE
-            view.staff_show_more.visibility = View.GONE
-        } else {
-            view.staff_recycler.layoutManager = NoScrollLinearLayoutManager(requireContext())
-            view.staff_recycler.adapter = staffAdapter
-            if (media.staff.size <= 2) {
-                staffAdapter.submitList(media.staff)
-                view.staff_show_more.visibility = View.GONE
-            } else {
-                staffAdapter.submitList(media.staff.subList(0, 2))
-                view.staff_show_more.setOnClickListener {
-                    findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToStaffFragment(
-                        MediaStaffSerializable(ArrayList(media.staff))
-                    ))
-                }
-            }
+    private fun configureStaffRecycler(media: Media, view: View) {
+        view.staff_recycler.layoutManager = NoScrollLinearLayoutManager(requireContext())
+        view.staff_recycler.adapter = staffAdapter
+        view.staff_show_more.setOnClickListener {
+            findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToStaffFragment(
+                MediaStaffSerializable(ArrayList(media.staff))
+            ))
         }
     }
 }
