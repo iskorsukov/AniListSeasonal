@@ -36,6 +36,7 @@ class ScheduleFragment: BaseFragment(), OnMediaItemClickListener {
 
             if (pager.adapter == null) {
                 pager.adapter = ScheduleTabViewPagerAdapter(childFragmentManager, items)
+                pager.setCurrentItem(1, false)
             } else {
                 (pager.adapter!! as ScheduleTabViewPagerAdapter).updateData(items)
             }
