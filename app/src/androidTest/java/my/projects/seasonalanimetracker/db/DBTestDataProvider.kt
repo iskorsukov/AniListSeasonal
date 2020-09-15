@@ -4,6 +4,8 @@ import my.projects.seasonalanimetracker.db.data.characters.DBCharacter
 import my.projects.seasonalanimetracker.db.data.characters.DBMediaCharacter
 import my.projects.seasonalanimetracker.db.data.characters.DBMediaCharacterEntity
 import my.projects.seasonalanimetracker.db.data.characters.DBVoiceActor
+import my.projects.seasonalanimetracker.db.data.following.DBFollowingItem
+import my.projects.seasonalanimetracker.db.data.following.DBFollowingItemEntity
 import my.projects.seasonalanimetracker.db.data.media.DBMedia
 import my.projects.seasonalanimetracker.db.data.media.DBMediaEntity
 import my.projects.seasonalanimetracker.db.data.media.MediaTitle
@@ -125,6 +127,9 @@ class DBTestDataProvider {
 
     val firstNotificationItemEntity: DBNotificationItemEntity
     val secondNotificationItemEntity: DBNotificationItemEntity
+
+    val firstFollowingItemEntity: DBFollowingItemEntity
+    val secondFollowingItemEntity: DBFollowingItemEntity
 
     init {
         val firstMediaEntity = DBMediaEntity(
@@ -278,6 +283,24 @@ class DBTestDataProvider {
             ),
             secondMediaEntity
         )
+
+        firstFollowingItemEntity = DBFollowingItemEntity(
+            DBFollowingItem(
+                1L,
+                1L,
+                "CURRENT"
+            ),
+            firstMediaEntity
+        )
+
+        secondFollowingItemEntity = DBFollowingItemEntity(
+            DBFollowingItem(
+                2L,
+                2L,
+                "CURRENT"
+            ),
+            secondMediaEntity
+        )
     }
 
     fun getScheduleSampleData(): List<DBScheduleItemEntity> {
@@ -286,5 +309,9 @@ class DBTestDataProvider {
 
     fun getNotificationsSampleData(): List<DBNotificationItemEntity> {
         return listOf(firstNotificationItemEntity, secondNotificationItemEntity)
+    }
+
+    fun getFollowingSampleData(): List<DBFollowingItemEntity> {
+        return listOf(firstFollowingItemEntity, secondFollowingItemEntity)
     }
 }
