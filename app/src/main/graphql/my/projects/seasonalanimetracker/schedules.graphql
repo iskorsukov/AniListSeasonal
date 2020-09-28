@@ -67,7 +67,7 @@ query FollowingPageQuery($userId: Int, $page: Int) {
     pageInfo {
     ...PageInfoFragment
     }
-    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED]) {
+    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED], sort: [STATUS, UPDATED_TIME]) {
       id
       status
         media {
