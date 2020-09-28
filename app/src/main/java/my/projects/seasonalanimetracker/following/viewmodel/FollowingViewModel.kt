@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import my.projects.seasonalanimetracker.following.domain.IFollowingDataSource
+import my.projects.seasonalanimetracker.following.domain.IFollowingSeasonSource
 import my.projects.seasonalanimetracker.following.viewobject.FollowingVO
 import my.projects.seasonalanimetracker.following.viewobject.IFollowingVO
 
@@ -24,7 +25,7 @@ class FollowingViewModel @ViewModelInject constructor(
     private val followingLD: LiveData<IFollowingVO> by lazy {
         MutableLiveData<IFollowingVO>().also { liveData ->
             followingDataSource.getFollowing().subscribe {
-                liveData.postValue(FollowingVO(it))
+                liveData.postValue(FollowingVO(it, followingDataSource.getCurrentSeason()))
             }
         }
     }

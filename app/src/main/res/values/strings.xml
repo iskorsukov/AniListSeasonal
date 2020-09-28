@@ -20,4 +20,8 @@
     <string name="avg_score">Average score</string>
     <string name="mean_score">Mean score</string>
     <string name="show_more">Show more</string>
+
+    <!-- Following -->
+    <string name="all">All</string>
+    <string name="remove">Remove</string>
 </resources>

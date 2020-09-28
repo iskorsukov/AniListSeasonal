@@ -12,4 +12,5 @@
     <color name="colorTextWhite">#FFFFFF</color>
     <color name="colorTextGray">#5A5A5A</color>
     <color name="colorTextLightGray">#959595</color>
+    <color name="colorTextRed">#B71C1C</color>
 </resources>

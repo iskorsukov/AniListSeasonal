@@ -20,6 +20,7 @@ import javax.inject.Inject
 interface IFollowingDataSource {
     fun getFollowing(): Observable<List<FollowingMediaItem>>
     fun updateFollowing(): Completable
+    fun getCurrentSeason(): Pair<String, Int>
 }
 
 class FollowingDataSource @Inject constructor(
@@ -52,6 +53,10 @@ class FollowingDataSource @Inject constructor(
             Timber.i("Storing ${items.size} entities")
             followingDAO.saveFollowingItems(items.map { dataToEntityMapper.map(it) })
         }
+    }
+
+    override fun getCurrentSeason(): Pair<String, Int> {
+        return followingSeasonSource.getCurrentSeason() to followingSeasonSource.getCurrentYear()
     }
 
 }
