@@ -16,7 +16,7 @@ interface IFollowingSeasonSource {
 class FollowingSeasonSource @Inject constructor(): IFollowingSeasonSource {
 
     override fun getCurrentSeason(): String {
-        val seasonIndex = Calendar.getInstance().get(Calendar.MONTH) / 4
+        val seasonIndex = Calendar.getInstance().get(Calendar.MONTH) / 3
         return when (seasonIndex) {
             0 -> MediaSeason.WINTER.name
             1 -> MediaSeason.SPRING.name

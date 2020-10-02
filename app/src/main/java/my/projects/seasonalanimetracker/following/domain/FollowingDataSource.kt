@@ -48,7 +48,7 @@ class FollowingDataSource @Inject constructor(
     }
 
     private fun loadFollowing(): Single<List<FollowingMediaItem>> {
-        return loader.loadFollowing(followingSeasonSource.getCurrentSeason(), followingSeasonSource.getCurrentYear())
+        return loader.loadFollowing()
     }
 
     private fun storeFollowing(items: List<FollowingMediaItem>): Completable {
