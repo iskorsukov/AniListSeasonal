@@ -193,3 +193,9 @@ fragment StudioFragment on StudioConnection {
     name
   }
 }
+
+mutation Unfollow($mediaId: Int) {
+  DeleteMediaListEntry(id: $mediaId) {
+    deleted
+  }
+}

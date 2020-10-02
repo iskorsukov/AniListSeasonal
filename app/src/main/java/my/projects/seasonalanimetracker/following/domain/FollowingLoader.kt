@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface IFollowingLoader {
     fun loadFollowing(season: String, seasonYear: Int): Single<List<FollowingMediaItem>>
+    fun removeFromFollowing(followingId: Int): Single<Boolean>
 }
 
 class FollowingLoader @Inject constructor(
@@ -32,6 +33,10 @@ class FollowingLoader @Inject constructor(
                 it.filter { item -> item.media.season == season && item.media.seasonYear == seasonYear }
             }
         }
+    }
+
+    override fun removeFromFollowing(followingId: Int): Single<Boolean> {
+        return queryClient.removeFromFollow(followingId)
     }
 }
 

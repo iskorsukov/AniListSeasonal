@@ -10,12 +10,14 @@ import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.data.media.Media
 import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
+import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
+import my.projects.seasonalanimetracker.following.ui.item.OnRemoveFollowingClickListener
 import my.projects.seasonalanimetracker.following.ui.tabs.FollowingTabViewPagerAdapter
 import my.projects.seasonalanimetracker.following.viewmodel.FollowingViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class FollowingFragment: BaseFragment(), OnMediaItemClickListener {
+class FollowingFragment: BaseFragment(), OnMediaItemClickListener, OnRemoveFollowingClickListener {
 
     private val viewModel: FollowingViewModel by viewModels()
 
@@ -51,5 +53,9 @@ class FollowingFragment: BaseFragment(), OnMediaItemClickListener {
 
     override fun onClickMediaItem(media: Media) {
         findNavController().navigate(FollowingFragmentDirections.actionFollowingFragmentToMediaFragment(media))
+    }
+
+    override fun onRemoveClick(item: FollowingMediaItem) {
+        viewModel.removeFromFollowing(item)
     }
 }

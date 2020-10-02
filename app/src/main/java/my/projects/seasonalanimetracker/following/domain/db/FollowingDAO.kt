@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import my.projects.seasonalanimetracker.app.testing.Mockable
 import my.projects.seasonalanimetracker.db.MediaDatabase
@@ -34,6 +35,9 @@ abstract class FollowingDAO: MediaDAO() {
             saveFollowingItem(item.followingItem)
         }
     }
+
+    @Query("delete from following where following.id = :followingId")
+    abstract fun deleteFromFollowing(followingId: Long): Completable
 }
 
 @Module

@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import my.projects.seasonalanimetracker.db.data.following.DBFollowingItemEntity
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.domain.db.FollowingDAO
@@ -15,12 +16,14 @@ import my.projects.seasonalanimetracker.following.domain.mapper.db.FollowingEnti
 import my.projects.seasonalanimetracker.following.domain.mapper.query.FollowingQueryToDataMapper
 import my.projects.seasonalanimetracker.schedule.domain.ScheduleDateSource
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 interface IFollowingDataSource {
     fun getFollowing(): Observable<List<FollowingMediaItem>>
     fun updateFollowing(): Completable
     fun getCurrentSeason(): Pair<String, Int>
+    fun removeFromFollowing(item: FollowingMediaItem): Completable
 }
 
 class FollowingDataSource @Inject constructor(
@@ -52,13 +55,23 @@ class FollowingDataSource @Inject constructor(
         return Completable.fromAction {
             Timber.i("Storing ${items.size} entities")
             followingDAO.saveFollowingItems(items.map { dataToEntityMapper.map(it) })
-        }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun getCurrentSeason(): Pair<String, Int> {
         return followingSeasonSource.getCurrentSeason() to followingSeasonSource.getCurrentYear()
     }
 
+    override fun removeFromFollowing(item: FollowingMediaItem): Completable {
+        return loader.removeFromFollowing(item.id.toInt()).flatMapCompletable { deleted ->
+            if (deleted) {
+                Timber.d("Request deleted")
+                followingDAO.deleteFromFollowing(item.id).doOnComplete { Timber.d("Deleted from db") }
+            } else {
+                Completable.error(IOException("Failed to delete media entry"))
+            }
+        }.subscribeOn(Schedulers.io())
+    }
 }
 
 @Module

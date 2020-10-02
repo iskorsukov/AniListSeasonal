@@ -12,6 +12,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import io.reactivex.Single
 import my.projects.seasonalanimetracker.FollowingPageQuery
 import my.projects.seasonalanimetracker.FollowingPagesCountQuery
+import my.projects.seasonalanimetracker.UnfollowMutation
 import my.projects.seasonalanimetracker.UserIdQuery
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.domain.mapper.query.FollowingQueryToDataMapper
@@ -21,6 +22,7 @@ import javax.inject.Inject
 interface IFollowingQueryClient {
     fun getPagesCount(): Single<Int>
     fun getPage(page: Int): Single<List<FollowingMediaItem>>
+    fun removeFromFollow(followingId: Int): Single<Boolean>
 }
 
 class FollowingQueryClient @Inject constructor(
@@ -30,7 +32,7 @@ class FollowingQueryClient @Inject constructor(
 
     override fun getPagesCount(): Single<Int> {
         return getUserId().map { id -> getPagesCountQuery(id) }.flatMap { query ->
-            Single.defer<Int> {
+            Single.defer {
                 return@defer Single.create { emitter ->
                     apolloClient.query(query).enqueue(object: ApolloCall.Callback<FollowingPagesCountQuery.Data>() {
                         override fun onResponse(response: Response<FollowingPagesCountQuery.Data>) {
@@ -71,7 +73,7 @@ class FollowingQueryClient @Inject constructor(
 
     override fun getPage(page: Int): Single<List<FollowingMediaItem>> {
         return getUserId().map { id -> getPageQuery(id, page) }.flatMap { query ->
-            Single.defer<List<FollowingMediaItem>> {
+            Single.defer {
                 return@defer Single.create { emitter ->
                     apolloClient.query(query).enqueue(object: ApolloCall.Callback<FollowingPageQuery.Data>() {
                         override fun onResponse(response: Response<FollowingPageQuery.Data>) {
@@ -89,6 +91,24 @@ class FollowingQueryClient @Inject constructor(
 
     private fun getPageQuery(userId: Int, page: Int): FollowingPageQuery {
         return FollowingPageQuery(Input.fromNullable(userId), Input.fromNullable(page))
+    }
+
+    override fun removeFromFollow(followingId: Int): Single<Boolean> {
+        return Single.defer {
+            return@defer Single.create { emitter ->
+                apolloClient
+                    .mutate(UnfollowMutation(Input.fromNullable(followingId)))
+                    .enqueue(object : ApolloCall.Callback<UnfollowMutation.Data>() {
+                        override fun onResponse(response: Response<UnfollowMutation.Data>) {
+                            emitter.onSuccess(response.data()!!.deleteMediaListEntry!!.deleted!!)
+                        }
+
+                        override fun onFailure(e: ApolloException) {
+                            emitter.onError(e)
+                        }
+                    })
+            }
+        }
     }
 
 }

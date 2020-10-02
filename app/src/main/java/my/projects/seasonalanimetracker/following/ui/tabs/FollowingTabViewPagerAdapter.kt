@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
+import timber.log.Timber
 
 class FollowingTabViewPagerAdapter(
     fragmentManager: FragmentManager,
@@ -21,6 +22,7 @@ class FollowingTabViewPagerAdapter(
     }
 
     fun updateData(following: List<FollowingMediaItem>) {
+        Timber.d("Updating data with ${following.size} items")
         data.clear()
         data.addAll(following)
         notifyDataSetChanged()
@@ -32,6 +34,10 @@ class FollowingTabViewPagerAdapter(
         } else {
             FollowingTabFragment.newInstance(data)
         }
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.domain.IFollowingDataSource
 import my.projects.seasonalanimetracker.following.domain.IFollowingSeasonSource
 import my.projects.seasonalanimetracker.following.viewobject.FollowingVO
@@ -16,6 +17,7 @@ import my.projects.seasonalanimetracker.following.viewobject.IFollowingVO
 abstract class IFollowingViewModel: ViewModel() {
     abstract fun followingLD(): LiveData<IFollowingVO>
     abstract fun updateFollowing()
+    abstract fun removeFromFollowing(item: FollowingMediaItem)
 }
 
 class FollowingViewModel @ViewModelInject constructor(
@@ -36,6 +38,10 @@ class FollowingViewModel @ViewModelInject constructor(
 
     override fun updateFollowing() {
         followingDataSource.updateFollowing().subscribe()
+    }
+
+    override fun removeFromFollowing(item: FollowingMediaItem) {
+        followingDataSource.removeFromFollowing(item).subscribe()
     }
 }
 
