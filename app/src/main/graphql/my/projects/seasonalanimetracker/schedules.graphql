@@ -141,6 +141,10 @@ fragment MediaFragment on Media {
   averageScore
   meanScore
   siteUrl
+  mediaListEntry {
+    id
+    status
+  }
 }
 
 fragment CharacterFragment on CharacterConnection {

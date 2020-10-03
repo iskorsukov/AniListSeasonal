@@ -49,7 +49,8 @@ class FollowingQueryToDataMapper @Inject constructor() {
                 mapCharacters(media.characters!!),
                 mapStaff(media.staff!!),
                 mapStudios(media.studios!!),
-                siteUrl!!
+                siteUrl!!,
+                mediaListEntry?.status?.name
             )
         }
     }

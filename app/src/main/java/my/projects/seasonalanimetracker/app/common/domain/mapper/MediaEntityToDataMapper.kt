@@ -35,7 +35,8 @@ abstract class MediaEntityToDataMapper {
             character = mapCharacters(entity.characterEntities),
             studios = mapStudios(entity.studioEntities),
             staff = mapStaff(entity.staffEntities),
-            siteUrl = entity.media.siteUrl
+            siteUrl = entity.media.siteUrl,
+            userStatus = entity.media.userStatus
         )
     }
 

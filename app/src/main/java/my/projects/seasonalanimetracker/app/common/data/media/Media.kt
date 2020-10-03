@@ -26,5 +26,6 @@ data class Media(
     val character: List<MediaCharacter>,
     val staff: List<MediaStaff>,
     val studios: List<MediaStudio>,
-    val siteUrl: String
+    val siteUrl: String,
+    val userStatus: String?
 ): Serializable

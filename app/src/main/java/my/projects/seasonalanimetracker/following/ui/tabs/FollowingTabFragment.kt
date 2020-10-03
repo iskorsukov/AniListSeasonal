@@ -9,8 +9,7 @@ import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.ui.item.FollowingRecyclerViewAdapter
-import my.projects.seasonalanimetracker.following.ui.item.OnRemoveFollowingClickListener
-import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
+import my.projects.seasonalanimetracker.following.ui.item.OnModifyFollowingClickListener
 import my.projects.seasonalanimetracker.schedule.ui.tabs.ScheduleTabFragment
 
 class FollowingTabFragment: BaseFragment() {
@@ -37,7 +36,7 @@ class FollowingTabFragment: BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = FollowingRecyclerViewAdapter(requireParentFragment() as OnMediaItemClickListener, requireParentFragment() as OnRemoveFollowingClickListener)
+        adapter = FollowingRecyclerViewAdapter(requireParentFragment() as OnMediaItemClickListener, requireParentFragment() as OnModifyFollowingClickListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
