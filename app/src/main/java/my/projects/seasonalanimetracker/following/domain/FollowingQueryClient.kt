@@ -10,18 +10,17 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import io.reactivex.Single
-import my.projects.seasonalanimetracker.FollowingPageQuery
-import my.projects.seasonalanimetracker.FollowingPagesCountQuery
-import my.projects.seasonalanimetracker.UnfollowMutation
-import my.projects.seasonalanimetracker.UserIdQuery
+import my.projects.seasonalanimetracker.*
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.domain.mapper.query.FollowingQueryToDataMapper
+import my.projects.seasonalanimetracker.type.MediaListStatus
 import java.io.IOException
 import javax.inject.Inject
 
 interface IFollowingQueryClient {
     fun getPagesCount(): Single<Int>
     fun getPage(page: Int): Single<List<FollowingMediaItem>>
+    fun updateFollowStatus(followingId: Int, status: String): Single<Boolean>
     fun removeFromFollow(followingId: Int): Single<Boolean>
 }
 
@@ -75,15 +74,17 @@ class FollowingQueryClient @Inject constructor(
         return getUserId().map { id -> getPageQuery(id, page) }.flatMap { query ->
             Single.defer {
                 return@defer Single.create { emitter ->
-                    apolloClient.query(query).enqueue(object: ApolloCall.Callback<FollowingPageQuery.Data>() {
-                        override fun onResponse(response: Response<FollowingPageQuery.Data>) {
-                            emitter.onSuccess(response.data()!!.page!!.mediaList!!.map { queryToDataMapper.map(it!!) })
-                        }
+                    apolloClient
+                        .query(query)
+                        .enqueue(object: ApolloCall.Callback<FollowingPageQuery.Data>() {
+                            override fun onResponse(response: Response<FollowingPageQuery.Data>) {
+                                emitter.onSuccess(response.data()!!.page!!.mediaList!!.map { queryToDataMapper.map(it!!) })
+                            }
 
-                        override fun onFailure(e: ApolloException) {
-                            emitter.onError(e)
-                        }
-                    })
+                            override fun onFailure(e: ApolloException) {
+                                emitter.onError(e)
+                            }
+                        })
                 }
             }
         }
@@ -93,13 +94,40 @@ class FollowingQueryClient @Inject constructor(
         return FollowingPageQuery(Input.fromNullable(userId), Input.fromNullable(page))
     }
 
+    override fun updateFollowStatus(followingId: Int, status: String): Single<Boolean> {
+        return Single.defer {
+            return@defer Single.create { emitter ->
+                apolloClient
+                    .mutate(
+                        UpdateMediaListEntryMutation(
+                            Input.fromNullable(followingId),
+                            Input.fromNullable(MediaListStatus.safeValueOf(status))
+                        )
+                    )
+                    .enqueue(object : ApolloCall.Callback<UpdateMediaListEntryMutation.Data>() {
+                        override fun onResponse(response: Response<UpdateMediaListEntryMutation.Data>) {
+                            emitter.onSuccess(response.data()!!.saveMediaListEntry!!.status!!.name == status)
+                        }
+
+                        override fun onFailure(e: ApolloException) {
+                            emitter.onError(e)
+                        }
+                    })
+            }
+        }
+    }
+
     override fun removeFromFollow(followingId: Int): Single<Boolean> {
         return Single.defer {
             return@defer Single.create { emitter ->
                 apolloClient
-                    .mutate(UnfollowMutation(Input.fromNullable(followingId)))
-                    .enqueue(object : ApolloCall.Callback<UnfollowMutation.Data>() {
-                        override fun onResponse(response: Response<UnfollowMutation.Data>) {
+                    .mutate(
+                        RemoveMediaListEntryMutation(
+                            Input.fromNullable(followingId)
+                        )
+                    )
+                    .enqueue(object : ApolloCall.Callback<RemoveMediaListEntryMutation.Data>() {
+                        override fun onResponse(response: Response<RemoveMediaListEntryMutation.Data>) {
                             emitter.onSuccess(response.data()!!.deleteMediaListEntry!!.deleted!!)
                         }
 

@@ -23,6 +23,7 @@ interface IFollowingDataSource {
     fun getFollowing(): Observable<List<FollowingMediaItem>>
     fun updateFollowing(): Completable
     fun getCurrentSeason(): Pair<String, Int>
+    fun updateFollowStatus(item: FollowingMediaItem, status: String): Completable
     fun removeFromFollowing(item: FollowingMediaItem): Completable
 }
 
@@ -60,6 +61,19 @@ class FollowingDataSource @Inject constructor(
 
     override fun getCurrentSeason(): Pair<String, Int> {
         return followingSeasonSource.getCurrentSeason() to followingSeasonSource.getCurrentYear()
+    }
+
+    override fun updateFollowStatus(item: FollowingMediaItem, status: String): Completable {
+        return loader.updateFollowStatus(item.id.toInt(), status).flatMapCompletable { updated ->
+            if (updated) {
+                Timber.d("Status updated")
+                Completable.fromAction {
+                    followingDAO.updateFollowingStatus(item.id, item.media.id, status)
+                }
+            } else {
+                Completable.error(IOException("Failed to update media status"))
+            }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun removeFromFollowing(item: FollowingMediaItem): Completable {

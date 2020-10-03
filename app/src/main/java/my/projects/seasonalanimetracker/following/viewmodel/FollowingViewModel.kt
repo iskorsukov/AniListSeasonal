@@ -43,6 +43,8 @@ class FollowingViewModel @ViewModelInject constructor(
     override fun processFollowingAction(action: MediaListAction, item: FollowingMediaItem) {
         if (action == MediaListAction.REMOVE) {
             removeFromFollowing(item)
+        } else {
+            followingDataSource.updateFollowStatus(item, action.name).subscribe()
         }
     }
 

@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface IFollowingLoader {
     fun loadFollowing(): Single<List<FollowingMediaItem>>
+    fun updateFollowStatus(followingId: Int, status: String): Single<Boolean>
     fun removeFromFollowing(followingId: Int): Single<Boolean>
 }
 
@@ -29,6 +30,10 @@ class FollowingLoader @Inject constructor(
                 seed
             })
         }
+    }
+
+    override fun updateFollowStatus(followingId: Int, status: String): Single<Boolean> {
+        return queryClient.updateFollowStatus(followingId, status)
     }
 
     override fun removeFromFollowing(followingId: Int): Single<Boolean> {

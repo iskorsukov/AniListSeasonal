@@ -198,8 +198,15 @@ fragment StudioFragment on StudioConnection {
   }
 }
 
-mutation Unfollow($mediaId: Int) {
-  DeleteMediaListEntry(id: $mediaId) {
+mutation RemoveMediaListEntry($id: Int) {
+  DeleteMediaListEntry(id: $id) {
     deleted
+  }
+}
+
+mutation UpdateMediaListEntry($id: Int, $status: MediaListStatus) {
+  SaveMediaListEntry(id: $id, status: $status) {
+    id
+    status
   }
 }

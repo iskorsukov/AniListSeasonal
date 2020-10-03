@@ -38,6 +38,15 @@ abstract class FollowingDAO: MediaDAO() {
 
     @Query("delete from following where following.id = :followingId")
     abstract fun deleteFromFollowing(followingId: Long): Completable
+
+    @Query("update following set status = :status where id = :followingId")
+    protected abstract fun updateFollowStatus(followingId: Long, status: String)
+
+    @Transaction
+    open fun updateFollowingStatus(followingId: Long, mediaId: Long, status: String) {
+        updateMediaStatus(mediaId, status)
+        updateFollowStatus(followingId, status)
+    }
 }
 
 @Module
