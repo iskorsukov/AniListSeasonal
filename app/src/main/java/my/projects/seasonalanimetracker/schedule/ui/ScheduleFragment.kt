@@ -8,14 +8,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.data.media.Media
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.status.OnModifyMediaStatusClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.status.MediaStatusDialogUtil
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.schedule.ui.tabs.ScheduleTabViewPagerAdapter
 import my.projects.seasonalanimetracker.schedule.viewmodel.ScheduleViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ScheduleFragment: BaseFragment(), OnMediaItemClickListener {
+class ScheduleFragment: BaseFragment(), OnMediaItemClickListener, OnModifyMediaStatusClickListener {
 
     private val scheduleViewModel: ScheduleViewModel by viewModels()
 
@@ -35,7 +37,7 @@ class ScheduleFragment: BaseFragment(), OnMediaItemClickListener {
             Timber.d("Showing ${items.values.flatten().size} items")
 
             if (pager.adapter == null) {
-                pager.adapter = ScheduleTabViewPagerAdapter(childFragmentManager, items)
+                pager.adapter = ScheduleTabViewPagerAdapter(childFragmentManager, scheduleVO)
                 pager.setCurrentItem(1, false)
             } else {
                 (pager.adapter!! as ScheduleTabViewPagerAdapter).updateData(items)
@@ -47,5 +49,13 @@ class ScheduleFragment: BaseFragment(), OnMediaItemClickListener {
 
     override fun onClickMediaItem(media: Media) {
         findNavController().navigate(ScheduleFragmentDirections.actionScheduleFragmentToMediaFragment(media))
+    }
+
+    override fun onModifyMediaStatusClick(item: Media) {
+        if (item.userStatus == null) {
+            MediaStatusDialogUtil.createSetMediaStatusActionDialog(requireContext(), item, scheduleViewModel).show()
+        } else {
+            MediaStatusDialogUtil.createModifyMediaStatusActionDialog(requireContext(), item, scheduleViewModel).show()
+        }
     }
 }

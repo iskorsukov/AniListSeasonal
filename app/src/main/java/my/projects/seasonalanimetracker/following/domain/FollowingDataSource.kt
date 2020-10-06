@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import my.projects.seasonalanimetracker.app.common.data.media.Media
 import my.projects.seasonalanimetracker.db.data.following.DBFollowingItemEntity
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.domain.db.FollowingDAO
@@ -23,8 +24,9 @@ interface IFollowingDataSource {
     fun getFollowing(): Observable<List<FollowingMediaItem>>
     fun updateFollowing(): Completable
     fun getCurrentSeason(): Pair<String, Int>
-    fun updateFollowStatus(item: FollowingMediaItem, status: String): Completable
-    fun removeFromFollowing(item: FollowingMediaItem): Completable
+    fun addFollowStatus(item: Media, status: String): Completable
+    fun updateFollowStatus(item: Media, status: String): Completable
+    fun removeFromFollowing(item: Media): Completable
 }
 
 class FollowingDataSource @Inject constructor(
@@ -39,13 +41,13 @@ class FollowingDataSource @Inject constructor(
         return followingDAO.getFollowing().map {
             Timber.i("Got ${it.size} entities")
             it.map { entityToDataMapper.map(it) }
-        }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun updateFollowing(): Completable {
         return loadFollowing().flatMapCompletable {
             storeFollowing(it)
-        }
+        }.subscribeOn(Schedulers.io())
     }
 
     private fun loadFollowing(): Single<List<FollowingMediaItem>> {
@@ -63,12 +65,21 @@ class FollowingDataSource @Inject constructor(
         return followingSeasonSource.getCurrentSeason() to followingSeasonSource.getCurrentYear()
     }
 
-    override fun updateFollowStatus(item: FollowingMediaItem, status: String): Completable {
+    override fun addFollowStatus(item: Media, status: String): Completable {
+        return loader.addToFollowing(item.id.toInt(), status).flatMapCompletable { idStatus ->
+            val followingItem = FollowingMediaItem(idStatus.first.toLong(), idStatus.second, item)
+            Completable.fromAction {
+                followingDAO.saveFollowingItem(dataToEntityMapper.map(followingItem))
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun updateFollowStatus(item: Media, status: String): Completable {
         return loader.updateFollowStatus(item.id.toInt(), status).flatMapCompletable { updated ->
             if (updated) {
                 Timber.d("Status updated")
                 Completable.fromAction {
-                    followingDAO.updateFollowingStatus(item.id, item.media.id, status)
+                    followingDAO.updateFollowingStatus(item.id, status)
                 }
             } else {
                 Completable.error(IOException("Failed to update media status"))
@@ -76,7 +87,7 @@ class FollowingDataSource @Inject constructor(
         }.subscribeOn(Schedulers.io())
     }
 
-    override fun removeFromFollowing(item: FollowingMediaItem): Completable {
+    override fun removeFromFollowing(item: Media): Completable {
         return loader.removeFromFollowing(item.id.toInt()).flatMapCompletable { deleted ->
             if (deleted) {
                 Timber.d("Request deleted")

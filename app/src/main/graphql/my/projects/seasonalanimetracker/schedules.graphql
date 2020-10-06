@@ -198,15 +198,28 @@ fragment StudioFragment on StudioConnection {
   }
 }
 
+query GetMediaListEntryIdByMediaId($mediaId: Int) {
+    MediaList(mediaId: $mediaId) {
+        id
+    }
+}
+
 mutation RemoveMediaListEntry($id: Int) {
   DeleteMediaListEntry(id: $id) {
     deleted
   }
 }
 
-mutation UpdateMediaListEntry($id: Int, $status: MediaListStatus) {
-  SaveMediaListEntry(id: $id, status: $status) {
+mutation UpdateMediaListEntry($mediaId: Int, $status: MediaListStatus) {
+  SaveMediaListEntry(mediaId: $mediaId, status: $status) {
     id
     status
   }
+}
+
+mutation AddMediaListEntry($mediaId: Int, $status: MediaListStatus) {
+    SaveMediaListEntry (mediaId: $mediaId, status: $status) {
+        id
+        status
+    }
 }

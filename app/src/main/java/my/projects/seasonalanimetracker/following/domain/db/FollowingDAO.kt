@@ -28,6 +28,11 @@ abstract class FollowingDAO: MediaDAO() {
     abstract fun clearFollowingItems()
 
     @Transaction
+    open fun saveFollowingItem(item: DBFollowingItemEntity) {
+        saveFollowingItem(item.followingItem)
+    }
+
+    @Transaction
     open fun saveFollowingItems(items: List<DBFollowingItemEntity>) {
         clearFollowingItems()
         for (item in items) {
@@ -39,13 +44,13 @@ abstract class FollowingDAO: MediaDAO() {
     @Query("delete from following where following.id = :followingId")
     abstract fun deleteFromFollowing(followingId: Long): Completable
 
-    @Query("update following set status = :status where id = :followingId")
-    protected abstract fun updateFollowStatus(followingId: Long, status: String)
+    @Query("update following set status = :status where mediaId = :mediaId")
+    protected abstract fun updateFollowStatus(mediaId: Long, status: String)
 
     @Transaction
-    open fun updateFollowingStatus(followingId: Long, mediaId: Long, status: String) {
+    open fun updateFollowingStatus(mediaId: Long, status: String) {
         updateMediaStatus(mediaId, status)
-        updateFollowStatus(followingId, status)
+        updateFollowStatus(mediaId, status)
     }
 }
 

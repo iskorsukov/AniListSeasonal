@@ -2,14 +2,11 @@ package my.projects.seasonalanimetracker.notifications.ui.item
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import my.projects.seasonalanimetracker.R
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.databinding.ItemNotificationBinding
 import my.projects.seasonalanimetracker.notifications.data.NotificationMediaItem
-import timber.log.Timber
 
 class NotificationsRecyclerViewPagedAdapter(private val mediaItemClickListener: OnMediaItemClickListener)
     : PagedListAdapter<NotificationMediaItem, NotificationItemViewHolder>(NotificationDiffUtilCallback()) {

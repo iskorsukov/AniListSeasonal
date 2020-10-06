@@ -11,8 +11,9 @@ import javax.inject.Inject
 
 interface IFollowingLoader {
     fun loadFollowing(): Single<List<FollowingMediaItem>>
-    fun updateFollowStatus(followingId: Int, status: String): Single<Boolean>
-    fun removeFromFollowing(followingId: Int): Single<Boolean>
+    fun addToFollowing(mediaId: Int, status: String): Single<Pair<Int, String>>
+    fun updateFollowStatus(mediaId: Int, status: String): Single<Boolean>
+    fun removeFromFollowing(mediaId: Int): Single<Boolean>
 }
 
 class FollowingLoader @Inject constructor(
@@ -32,12 +33,16 @@ class FollowingLoader @Inject constructor(
         }
     }
 
-    override fun updateFollowStatus(followingId: Int, status: String): Single<Boolean> {
-        return queryClient.updateFollowStatus(followingId, status)
+    override fun addToFollowing(mediaId: Int, status: String): Single<Pair<Int, String>> {
+        return queryClient.addToFollow(mediaId, status)
     }
 
-    override fun removeFromFollowing(followingId: Int): Single<Boolean> {
-        return queryClient.removeFromFollow(followingId)
+    override fun updateFollowStatus(mediaId: Int, status: String): Single<Boolean> {
+        return queryClient.updateFollowStatus(mediaId, status)
+    }
+
+    override fun removeFromFollowing(mediaId: Int): Single<Boolean> {
+        return queryClient.getFollowIdForMediaId(mediaId).flatMap { id -> queryClient.removeFromFollow(id) }
     }
 }
 

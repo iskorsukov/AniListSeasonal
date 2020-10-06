@@ -2,16 +2,14 @@ package my.projects.seasonalanimetracker.following.ui.tabs
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_following_tab.*
-import kotlinx.android.synthetic.main.fragment_schedule_tab.*
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.ui.NoScrollLinearLayoutManager
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
 import my.projects.seasonalanimetracker.following.ui.item.FollowingRecyclerViewAdapter
-import my.projects.seasonalanimetracker.following.ui.item.OnModifyFollowingClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.status.OnModifyMediaStatusClickListener
 import my.projects.seasonalanimetracker.schedule.ui.tabs.ScheduleTabFragment
 import my.projects.seasonalanimetracker.type.MediaListStatus
 
@@ -47,31 +45,31 @@ class FollowingTabFragment: BaseFragment() {
         current_recycler_view.layoutManager = NoScrollLinearLayoutManager(requireContext())
         current_recycler_view.adapter = FollowingRecyclerViewAdapter(
             requireParentFragment() as OnMediaItemClickListener,
-            requireParentFragment() as OnModifyFollowingClickListener
+            requireParentFragment() as OnModifyMediaStatusClickListener
         )
 
         planning_recycler_view.layoutManager = NoScrollLinearLayoutManager(requireContext())
         planning_recycler_view.adapter = FollowingRecyclerViewAdapter(
             requireParentFragment() as OnMediaItemClickListener,
-            requireParentFragment() as OnModifyFollowingClickListener
+            requireParentFragment() as OnModifyMediaStatusClickListener
         )
 
         completed_recycler_view.layoutManager = NoScrollLinearLayoutManager(requireContext())
         completed_recycler_view.adapter = FollowingRecyclerViewAdapter(
             requireParentFragment() as OnMediaItemClickListener,
-            requireParentFragment() as OnModifyFollowingClickListener
+            requireParentFragment() as OnModifyMediaStatusClickListener
         )
 
         paused_recycler_view.layoutManager = NoScrollLinearLayoutManager(requireContext())
         paused_recycler_view.adapter = FollowingRecyclerViewAdapter(
             requireParentFragment() as OnMediaItemClickListener,
-            requireParentFragment() as OnModifyFollowingClickListener
+            requireParentFragment() as OnModifyMediaStatusClickListener
         )
 
         dropped_recycler_view.layoutManager = NoScrollLinearLayoutManager(requireContext())
         dropped_recycler_view.adapter = FollowingRecyclerViewAdapter(
             requireParentFragment() as OnMediaItemClickListener,
-            requireParentFragment() as OnModifyFollowingClickListener
+            requireParentFragment() as OnModifyMediaStatusClickListener
         )
     }
 

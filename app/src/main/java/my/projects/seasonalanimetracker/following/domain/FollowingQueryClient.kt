@@ -20,6 +20,8 @@ import javax.inject.Inject
 interface IFollowingQueryClient {
     fun getPagesCount(): Single<Int>
     fun getPage(page: Int): Single<List<FollowingMediaItem>>
+    fun getFollowIdForMediaId(mediaId: Int): Single<Int>
+    fun addToFollow(mediaId: Int, status: String): Single<Pair<Int, String>>
     fun updateFollowStatus(followingId: Int, status: String): Single<Boolean>
     fun removeFromFollow(followingId: Int): Single<Boolean>
 }
@@ -92,6 +94,49 @@ class FollowingQueryClient @Inject constructor(
 
     private fun getPageQuery(userId: Int, page: Int): FollowingPageQuery {
         return FollowingPageQuery(Input.fromNullable(userId), Input.fromNullable(page))
+    }
+
+    override fun getFollowIdForMediaId(mediaId: Int): Single<Int> {
+        return Single.defer {
+            return@defer Single.create { emitter ->
+                apolloClient
+                    .query(GetMediaListEntryIdByMediaIdQuery(Input.fromNullable(mediaId)))
+                    .enqueue(object : ApolloCall.Callback<GetMediaListEntryIdByMediaIdQuery.Data>() {
+                        override fun onResponse(response: Response<GetMediaListEntryIdByMediaIdQuery.Data>) {
+                            emitter.onSuccess(response.data()!!.mediaList!!.id)
+                        }
+
+                        override fun onFailure(e: ApolloException) {
+                            emitter.onError(e)
+                        }
+                    })
+            }
+        }
+    }
+
+    override fun addToFollow(mediaId: Int, status: String): Single<Pair<Int, String>> {
+        return Single.defer {
+            return@defer Single.create { emitter ->
+                apolloClient
+                    .mutate(
+                        AddMediaListEntryMutation(
+                            Input.fromNullable(mediaId),
+                            Input.fromNullable(MediaListStatus.safeValueOf(status))
+                        )
+                    )
+                    .enqueue(object  : ApolloCall.Callback<AddMediaListEntryMutation.Data>() {
+                        override fun onResponse(response: Response<AddMediaListEntryMutation.Data>) {
+                            val id = response.data()!!.saveMediaListEntry!!.id
+                            val st = response.data()!!.saveMediaListEntry!!.status!!
+                            emitter.onSuccess(id to st.name)
+                        }
+
+                        override fun onFailure(e: ApolloException) {
+                            emitter.onError(e)
+                        }
+                    })
+            }
+        }
     }
 
     override fun updateFollowStatus(followingId: Int, status: String): Single<Boolean> {

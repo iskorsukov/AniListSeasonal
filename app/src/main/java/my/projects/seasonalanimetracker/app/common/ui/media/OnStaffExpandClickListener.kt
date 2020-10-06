@@ -1,4 +1,4 @@
-package my.projects.seasonalanimetracker.app.common.ui
+package my.projects.seasonalanimetracker.app.common.ui.media
 
 import my.projects.seasonalanimetracker.app.common.data.staff.MediaStaff
 
