@@ -8,6 +8,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.ui.media.status.SelectMediaListActionListener
+import my.projects.seasonalanimetracker.following.data.FollowingMediaItem
+import my.projects.seasonalanimetracker.following.data.MediaListAction
 import my.projects.seasonalanimetracker.following.domain.IFollowingDataSource
 import my.projects.seasonalanimetracker.following.viewobject.FollowingVO
 import my.projects.seasonalanimetracker.following.viewobject.IFollowingVO
@@ -19,12 +23,12 @@ abstract class IFollowingViewModel: ViewModel() {
 
 class FollowingViewModel @ViewModelInject constructor(
     private val followingDataSource: IFollowingDataSource
-): IFollowingViewModel() {
+): IFollowingViewModel(), SelectMediaListActionListener {
 
     private val followingLD: LiveData<IFollowingVO> by lazy {
         MutableLiveData<IFollowingVO>().also { liveData ->
             followingDataSource.getFollowing().subscribe {
-                liveData.postValue(FollowingVO(it))
+                liveData.postValue(FollowingVO(it, followingDataSource.getCurrentSeason()))
             }
         }
     }
@@ -35,6 +39,14 @@ class FollowingViewModel @ViewModelInject constructor(
 
     override fun updateFollowing() {
         followingDataSource.updateFollowing().subscribe()
+    }
+
+    override fun onMediaStatusSelected(item: Media, action: MediaListAction) {
+        if (action == MediaListAction.REMOVE) {
+            followingDataSource.removeFromFollowing(item).subscribe()
+        } else {
+            followingDataSource.updateFollowStatus(item, action.name).subscribe()
+        }
     }
 }
 

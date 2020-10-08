@@ -5,26 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_schedule_tab.*
 import my.projects.seasonalanimetracker.R
-import my.projects.seasonalanimetracker.app.common.data.media.Media
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.status.OnModifyMediaStatusClickListener
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import my.projects.seasonalanimetracker.schedule.ui.item.ScheduleRecyclerViewAdapter
-import java.time.DayOfWeek
 
 class ScheduleTabFragment: Fragment() {
 
     companion object {
         const val ARG_ITEMS = "items"
+        const val ARG_AUTH = "auth"
 
-        fun newInstance(items: List<ScheduleMediaItem>): ScheduleTabFragment {
+        fun newInstance(items: List<ScheduleMediaItem>, isAuth: Boolean): ScheduleTabFragment {
             val fragment =
                 ScheduleTabFragment()
             fragment.arguments = Bundle().apply {
                 putSerializable(ARG_ITEMS, ArrayList<ScheduleMediaItem>(items))
+                putBoolean(ARG_AUTH, isAuth)
             }
             return fragment
         }
@@ -34,7 +34,11 @@ class ScheduleTabFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = ScheduleRecyclerViewAdapter(requireParentFragment() as OnMediaItemClickListener)
+        adapter = ScheduleRecyclerViewAdapter(
+            requireParentFragment() as OnMediaItemClickListener,
+            requireParentFragment() as OnModifyMediaStatusClickListener,
+            requireArguments().getBoolean(ARG_AUTH)
+        )
     }
 
     override fun onCreateView(

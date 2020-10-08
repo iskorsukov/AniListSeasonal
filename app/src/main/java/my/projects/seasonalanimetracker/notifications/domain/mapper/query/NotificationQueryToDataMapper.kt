@@ -48,7 +48,8 @@ class NotificationQueryToDataMapper @Inject constructor() {
                 mapCharacters(media.characters!!),
                 mapStaff(media.staff!!),
                 emptyList(),
-                siteUrl!!
+                siteUrl!!,
+                mediaListEntry?.status?.name
             )
         }
     }

@@ -4,13 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import my.projects.seasonalanimetracker.R
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import kotlinx.android.synthetic.main.item_schedule.view.*
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.status.OnModifyMediaStatusClickListener
 import my.projects.seasonalanimetracker.databinding.ItemScheduleBinding
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
-import java.time.DayOfWeek
 
-class ScheduleRecyclerViewAdapter(private val mediaItemClickListener: OnMediaItemClickListener): ListAdapter<ScheduleMediaItem, ScheduleItemViewHolder>(ScheduleDiffUtilCallback()) {
+class ScheduleRecyclerViewAdapter(
+    private val mediaItemClickListener: OnMediaItemClickListener,
+    private val mediaStatusClickListener: OnModifyMediaStatusClickListener,
+    private val isAuth: Boolean
+): ListAdapter<ScheduleMediaItem, ScheduleItemViewHolder>(ScheduleDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleItemViewHolder {
         val binding = ItemScheduleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -18,9 +22,12 @@ class ScheduleRecyclerViewAdapter(private val mediaItemClickListener: OnMediaIte
     }
 
     override fun onBindViewHolder(holder: ScheduleItemViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), isAuth)
         holder.itemView.setOnClickListener {
             mediaItemClickListener.onClickMediaItem(getItem(position).media)
+        }
+        holder.itemView.status_action.setOnClickListener {
+            mediaStatusClickListener.onModifyMediaStatusClick(getItem(position).media)
         }
     }
 }

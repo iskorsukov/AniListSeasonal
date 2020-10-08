@@ -40,7 +40,8 @@ abstract class MediaDataToEntityMapper {
                 media.genres,
                 media.averageScore,
                 media.meanScore,
-                media.siteUrl
+                media.siteUrl,
+                media.userStatus
             ),
             mapMediaCharacters(media.character, media.id),
             mapMediaStudios(media.studios, media.id),

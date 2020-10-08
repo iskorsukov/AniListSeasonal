@@ -64,6 +64,9 @@ abstract class MediaDAO {
         }
         saveMedia(mediaEntity.media)
     }
+
+    @Query("update shows set userStatus = :status where id = :mediaId")
+    protected abstract fun updateMediaStatus(mediaId: Long, status: String)
 }
 
 @Module

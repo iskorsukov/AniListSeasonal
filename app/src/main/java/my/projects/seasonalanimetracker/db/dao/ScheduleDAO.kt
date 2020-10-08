@@ -27,6 +27,9 @@ abstract class ScheduleDAO: MediaDAO() {
     @Query("delete from schedules")
     abstract fun clearSchedules()
 
+    @Query("update shows set userStatus = :status where id = :mediaId")
+    abstract fun updateFollowStatus(mediaId: Long, status: String)
+
     @Transaction
     open fun saveSchedule(schedules: List<DBScheduleItemEntity>) {
         clearSchedules()

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="media_list_action_labels">
+        <item>@string/set_watching</item>
+        <item>@string/set_planning</item>
+        <item>@string/set_completed</item>
+        <item>@string/set_paused</item>
+        <item>@string/set_dropped</item>
+        <item>@string/remove</item>
+    </string-array>
+
+    <string-array name="media_list_actions">
+        <item>@string/current</item>
+        <item>@string/planning</item>
+        <item>@string/completed</item>
+        <item>@string/paused</item>
+        <item>@string/dropped</item>
+        <item>@string/remove</item>
+    </string-array>
+</resources>

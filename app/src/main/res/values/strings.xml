@@ -2,13 +2,17 @@
     <string name="app_name">Seasonal Anime Tracker</string>
     <string name="client_id">915dc1c5304c3f316ae4ec571b1b5017</string>
 
+    <!-- Common -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Auth -->
     <string name="login_anilist">Login using ANILIST</string>
     <string name="login_guest">Proceed without login</string>
 
     <string name="title_notifications">Notifications</string>
-    <string name="title_schedule">Schedule</string>
-    <string name="title_following">Following</string>
 
     <!-- Media -->
     <string name="characters">Characters</string>
@@ -20,4 +24,30 @@
     <string name="avg_score">Average score</string>
     <string name="mean_score">Mean score</string>
     <string name="show_more">Show more</string>
+
+    <!-- Schedule -->
+    <string name="title_schedule">Schedule</string>
+    <string name="add_to_list">Add to list</string>
+    
+    <!-- Media status -->
+    <string name="current">Current</string>
+    <string name="planning">Planning</string>
+    <string name="completed">Completed</string>
+    <string name="dropped">Dropped</string>
+    <string name="paused">Paused</string>
+
+    <!-- Following -->
+    <string name="title_following">Following</string>
+    <string name="all">All</string>
+    <string name="modify">Modify</string>
+
+    <!-- Media list entry context actions -->
+    <string name="select_action">Select action</string>
+    <string name="remove">Remove</string>
+    <string name="remove_message">Are you sure you want to remove the item from your media list?</string>
+    <string name="set_watching">Set as Watching</string>
+    <string name="set_planning">Set as Planning</string>
+    <string name="set_completed">Set as Completed</string>
+    <string name="set_dropped">Set as Dropped</string>
+    <string name="set_paused">Set as Paused</string>
 </resources>

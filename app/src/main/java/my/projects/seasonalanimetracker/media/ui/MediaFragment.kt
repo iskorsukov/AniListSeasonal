@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_media_right_strip.view.*
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.ui.NoScrollLinearLayoutManager
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.databinding.FragmentMediaBinding
 import my.projects.seasonalanimetracker.media.ui.item.character.CharactersRecyclerViewAdapter
@@ -21,16 +22,6 @@ import my.projects.seasonalanimetracker.media.ui.item.staff.MediaStaffSerializab
 import my.projects.seasonalanimetracker.media.ui.item.staff.StaffRecyclerViewAdapter
 
 class MediaFragment: BaseFragment() {
-
-    private class NoScrollLinearLayoutManager(context: Context): LinearLayoutManager(context) {
-        override fun canScrollVertically(): Boolean {
-            return false
-        }
-
-        override fun canScrollHorizontally(): Boolean {
-            return false
-        }
-    }
 
     private val charactersAdapter = CharactersRecyclerViewAdapter()
     private val staffAdapter = StaffRecyclerViewAdapter()

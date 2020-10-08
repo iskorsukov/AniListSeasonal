@@ -9,6 +9,12 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import io.reactivex.disposables.CompositeDisposable
+import my.projects.seasonalanimetracker.app.common.data.media.Media
+import my.projects.seasonalanimetracker.app.common.ui.media.status.SelectMediaListActionListener
+import my.projects.seasonalanimetracker.auth.domain.IAuthDataSource
+import my.projects.seasonalanimetracker.following.data.MediaListAction
+import my.projects.seasonalanimetracker.following.domain.FollowingDataSource
+import my.projects.seasonalanimetracker.following.domain.IFollowingDataSource
 import my.projects.seasonalanimetracker.schedule.data.ScheduleDataUtils
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
 import my.projects.seasonalanimetracker.schedule.domain.IScheduleDataSource
@@ -24,15 +30,17 @@ abstract class IScheduleViewModel: ViewModel() {
 }
 
 class ScheduleViewModel @ViewModelInject constructor (
-    private val scheduleDataSource: IScheduleDataSource
-): IScheduleViewModel() {
+    private val scheduleDataSource: IScheduleDataSource,
+    private val followingDataSource: IFollowingDataSource,
+    private val authDataSource: IAuthDataSource
+): IScheduleViewModel(), SelectMediaListActionListener {
 
     private var scheduleDisposable = CompositeDisposable()
 
     private val scheduleLD: LiveData<IScheduleVO> by lazy {
         MutableLiveData<IScheduleVO>().also {
             val disposable = scheduleDataSource.getSchedule().subscribe { schedules ->
-                it.postValue(ScheduleVO(schedules))
+                it.postValue(ScheduleVO(schedules, authDataSource.isAuthorized()))
             }
             scheduleDisposable.add(disposable)
         }
@@ -48,6 +56,16 @@ class ScheduleViewModel @ViewModelInject constructor (
             { throwable: Throwable? -> throwable?.printStackTrace() }
         )
         scheduleDisposable.add(disposable)
+    }
+
+    override fun onMediaStatusSelected(item: Media, action: MediaListAction) {
+        if (action == MediaListAction.REMOVE) {
+            followingDataSource.removeFromFollowing(item).subscribe()
+        } else if (item.userStatus == null) {
+            followingDataSource.addFollowStatus(item, action.name).andThen(scheduleDataSource.updateLocalMediaStatus(item, action.name)).subscribe()
+        } else {
+            followingDataSource.updateFollowStatus(item, action.name).subscribe()
+        }
     }
 
     override fun onCleared() {

@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import my.projects.seasonalanimetracker.R
 import my.projects.seasonalanimetracker.app.common.data.media.Media
-import my.projects.seasonalanimetracker.app.common.ui.OnMediaItemClickListener
+import my.projects.seasonalanimetracker.app.common.ui.media.OnMediaItemClickListener
 import my.projects.seasonalanimetracker.app.ui.fragment.BaseFragment
 import my.projects.seasonalanimetracker.notifications.ui.item.NotificationsRecyclerViewPagedAdapter
 import my.projects.seasonalanimetracker.notifications.viewmodel.NotificationViewModel

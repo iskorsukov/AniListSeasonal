@@ -1,6 +1,5 @@
 package my.projects.seasonalanimetracker.schedule.domain
 
-import android.content.SharedPreferences
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -8,7 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import my.projects.seasonalanimetracker.db.dao.MediaDAO
+import my.projects.seasonalanimetracker.app.common.data.media.Media
 import my.projects.seasonalanimetracker.db.dao.ScheduleDAO
 import my.projects.seasonalanimetracker.schedule.data.ScheduleDataUtils
 import my.projects.seasonalanimetracker.schedule.data.ScheduleMediaItem
@@ -16,13 +15,12 @@ import my.projects.seasonalanimetracker.schedule.domain.mapper.db.ScheduleDataTo
 import my.projects.seasonalanimetracker.schedule.domain.mapper.db.ScheduleEntityToDataMapper
 import timber.log.Timber
 import java.time.DayOfWeek
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.LinkedHashMap
 
 interface IScheduleDataSource {
     fun getSchedule(): Observable<Map<DayOfWeek, List<ScheduleMediaItem>>>
     fun updateSchedule(): Completable
+    fun updateLocalMediaStatus(media: Media, status: String): Completable
 }
 
 class ScheduleDataSource @Inject constructor (
@@ -50,7 +48,6 @@ class ScheduleDataSource @Inject constructor (
             Timber.d("Updating schedule")
             loadSchedule()
         }
-
     }
 
     private fun isDateAfterLastUpdateDate(): Boolean {
@@ -62,7 +59,7 @@ class ScheduleDataSource @Inject constructor (
     }
 
     private fun saveUpdateDate(): Completable {
-        return Completable.fromAction { dateSource.saveUpdateDate(dateSource.getCurrentDate()) }
+        return Completable.fromAction { dateSource.saveUpdateDate(dateSource.getCurrentDate()) }.subscribeOn(Schedulers.io())
     }
 
     private fun loadSchedule(): Completable {
@@ -75,7 +72,7 @@ class ScheduleDataSource @Inject constructor (
         Timber.d("Storing ${schedule.size} items")
         return Completable.fromAction {
             scheduleDAO.saveSchedule(schedule.map { dataToEntityMapper.map(it) })
-        }
+        }.subscribeOn(Schedulers.io())
     }
 
     private fun schedulesToDayOfWeekMap(schedules: List<ScheduleMediaItem>): Map<DayOfWeek, List<ScheduleMediaItem>> {
@@ -98,6 +95,12 @@ class ScheduleDataSource @Inject constructor (
             map[dayOfWeek] = list
         }
         return map
+    }
+
+    override fun updateLocalMediaStatus(media: Media, status: String): Completable {
+        return Completable.fromAction {
+            scheduleDAO.updateFollowStatus(media.id, status)
+        }.subscribeOn(Schedulers.io())
     }
 }
 

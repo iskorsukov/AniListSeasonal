@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import my.projects.seasonalanimetracker.app.testing.Mockable
 import my.projects.seasonalanimetracker.db.MediaDatabase
@@ -27,12 +28,29 @@ abstract class FollowingDAO: MediaDAO() {
     abstract fun clearFollowingItems()
 
     @Transaction
+    open fun saveFollowingItem(item: DBFollowingItemEntity) {
+        saveFollowingItem(item.followingItem)
+    }
+
+    @Transaction
     open fun saveFollowingItems(items: List<DBFollowingItemEntity>) {
         clearFollowingItems()
         for (item in items) {
             saveMediaEntity(item.mediaEntity)
             saveFollowingItem(item.followingItem)
         }
+    }
+
+    @Query("delete from following where following.id = :followingId")
+    abstract fun deleteFromFollowing(followingId: Long): Completable
+
+    @Query("update following set status = :status where mediaId = :mediaId")
+    protected abstract fun updateFollowStatus(mediaId: Long, status: String)
+
+    @Transaction
+    open fun updateFollowingStatus(mediaId: Long, status: String) {
+        updateMediaStatus(mediaId, status)
+        updateFollowStatus(mediaId, status)
     }
 }
 

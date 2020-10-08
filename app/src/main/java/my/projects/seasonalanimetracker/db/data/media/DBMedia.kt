@@ -19,7 +19,8 @@ data class DBMedia(
     val genres: String?,
     val averageScore: Double?,
     val meanScore: Double?,
-    val siteUrl: String
+    val siteUrl: String,
+    val userStatus: String?
 )
 
 data class MediaTitle(

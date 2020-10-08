@@ -67,7 +67,7 @@ query FollowingPageQuery($userId: Int, $page: Int) {
     pageInfo {
     ...PageInfoFragment
     }
-    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED]) {
+    mediaList(userId: $userId, compareWithAuthList: true, status_in: [CURRENT, PLANNING, PAUSED], sort: [STATUS, UPDATED_TIME]) {
       id
       status
         media {
@@ -141,6 +141,10 @@ fragment MediaFragment on Media {
   averageScore
   meanScore
   siteUrl
+  mediaListEntry {
+    id
+    status
+  }
 }
 
 fragment CharacterFragment on CharacterConnection {
@@ -192,4 +196,30 @@ fragment StudioFragment on StudioConnection {
     id
     name
   }
+}
+
+query GetMediaListEntryIdByMediaId($mediaId: Int) {
+    MediaList(mediaId: $mediaId) {
+        id
+    }
+}
+
+mutation RemoveMediaListEntry($id: Int) {
+  DeleteMediaListEntry(id: $id) {
+    deleted
+  }
+}
+
+mutation UpdateMediaListEntry($mediaId: Int, $status: MediaListStatus) {
+  SaveMediaListEntry(mediaId: $mediaId, status: $status) {
+    id
+    status
+  }
+}
+
+mutation AddMediaListEntry($mediaId: Int, $status: MediaListStatus) {
+    SaveMediaListEntry (mediaId: $mediaId, status: $status) {
+        id
+        status
+    }
 }
