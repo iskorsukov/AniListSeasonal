@@ -2,6 +2,7 @@ package my.projects.seasonalanimetracker.notifications.domain
 
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import dagger.Binds
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 interface INotificationsQueryClient {
     fun getPage(): Single<List<NotificationMediaItem>>
+    fun getPage(size: Int): Single<List<NotificationMediaItem>>
     fun getUnreadNotificationsCount(): Single<Int>
 }
 
@@ -37,8 +39,16 @@ class NotificationsQueryClient @Inject constructor(
         }
     }
 
-    private fun getNotificationsQuery(): NotificationsQuery {
-        return NotificationsQuery()
+    override fun getPage(size: Int): Single<List<NotificationMediaItem>> {
+        return Single.defer<List<NotificationMediaItem>> {
+            return@defer Single.create { emitter ->
+                apolloClient.query(getNotificationsQuery(size)).enqueue(AccumulatorCallback(emitter))
+            }
+        }
+    }
+
+    private fun getNotificationsQuery(size: Int = 50): NotificationsQuery {
+        return NotificationsQuery(Input.fromNullable(size))
     }
 
     override fun getUnreadNotificationsCount(): Single<Int> {

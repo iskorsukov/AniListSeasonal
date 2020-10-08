@@ -32,7 +32,6 @@ class NotificationCheckWorker @WorkerInject constructor(
     @Assisted workerParameters: WorkerParameters,
     private val notificationsDAO: NotificationsDAO,
     private val notificationsLoader: INotificationsLoader,
-    private val notificationEntityToDataMapper: NotificationEntityToDataMapper,
     private val notificationDataToEntityMapper: NotificationDataToEntityMapper
 ): RxWorker(context, workerParameters) {
 
@@ -43,37 +42,33 @@ class NotificationCheckWorker @WorkerInject constructor(
     }
 
     override fun createWork(): Single<Result> {
-        return hasUnreadNotifications().flatMap { hasUnread ->
-            if (hasUnread) {
+        return getUnreadNotificationsCount().flatMap { unread ->
+            if (unread > 0) {
                 Timber.d("Found unread notifications")
-                Single.zip(
-                    notificationsLoader.loadNotifications().subscribeOn(Schedulers.io()),
-                    getStoredNotifications().subscribeOn(Schedulers.io()),
-                    BiFunction { loadedNotifications: List<NotificationMediaItem>, storedNotifications: List<NotificationMediaItem> ->
-                        loadedNotifications.filterNot { item ->
-                            storedNotifications.any { it.id == item.id }
-                        }
-                    }
-                )
+                notificationsLoader.loadNotifications(unread).subscribeOn(Schedulers.io())
             } else {
                 Timber.d("No unread notifications")
                 Single.just(emptyList())
             }
         }.flatMapCompletable { newNotifications ->
-            raiseNotifications(newNotifications).andThen(storeNotifications(newNotifications))
+            when {
+                newNotifications.isEmpty() -> {
+                    Completable.complete()
+                }
+                newNotifications.size > 3 -> {
+                    raiseGroupNotification(newNotifications).andThen(storeNotifications(newNotifications))
+                }
+                else -> {
+                    raiseNotifications(newNotifications).andThen(storeNotifications(newNotifications))
+                }
+            }
         }.toSingle {
             Result.success()
         }
     }
 
-    private fun hasUnreadNotifications(): Single<Boolean> {
-        return notificationsLoader.loadUnreadNotificationsCount().map { count -> count > 0 }
-    }
-
-    private fun getStoredNotifications(): Single<List<NotificationMediaItem>> {
-        return notificationsDAO.getNotifications().map {
-            it.map { notificationEntityToDataMapper.map(it) }
-        }
+    private fun getUnreadNotificationsCount(): Single<Int> {
+        return notificationsLoader.loadUnreadNotificationsCount()
     }
 
     private fun raiseNotifications(notifications: List<NotificationMediaItem>): Completable {
@@ -85,6 +80,17 @@ class NotificationCheckWorker @WorkerInject constructor(
                 createdNotifications.forEach {
                     notify(Random.nextInt(), it)
                 }
+            }
+        }
+    }
+
+    private fun raiseGroupNotification(notifications: List<NotificationMediaItem>): Completable {
+        Timber.d("Raising ${notifications.size} a group notification")
+        return Completable.fromAction {
+            createNotificationChannel()
+            val createdNotification = createGroupNotification(notifications)
+            with (NotificationManagerCompat.from(applicationContext)) {
+                notify(Random.nextInt(), createdNotification)
             }
         }
     }
@@ -126,8 +132,23 @@ class NotificationCheckWorker @WorkerInject constructor(
 
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle(notification.media.titleEnglish ?: notification.media.titleRomaji ?: notification.media.titleNative ?: "Show aired")
-            .setContentText("Ep ${notification.episode} just aired at $formattedTime")
+            .setContentTitle(
+                notification.media.titleEnglish
+                    ?: notification.media.titleRomaji
+                    ?: notification.media.titleNative
+                    ?: applicationContext.getString(R.string.notification_show_aired))
+            .setContentText(applicationContext.getString(R.string.ep_aired_notification, notification.episode, formattedTime))
+            .setSmallIcon(R.drawable.ic_notifications_white)
+            .setAutoCancel(true)
+
+        return builder.build()
+    }
+
+    private fun createGroupNotification(notifications: List<NotificationMediaItem>): Notification {
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setContentTitle(applicationContext.getString(R.string.notification_new_group_title))
+            .setContentText(applicationContext.getString(R.string.unread_notifications, notifications.size))
             .setSmallIcon(R.drawable.ic_notifications_white)
             .setAutoCancel(true)
 
