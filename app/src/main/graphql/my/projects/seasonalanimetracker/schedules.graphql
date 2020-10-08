@@ -32,8 +32,8 @@ query SchedulesPageInfoQuery($start: Int!, $end: Int!) {
   }
 }
 
-query NotificationsQuery {
-  Page {
+query NotificationsQuery($size: Int) {
+  Page(perPage: $size) {
     pageInfo {
       ...PageInfoFragment
     }

@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface INotificationsLoader {
     fun loadNotifications(): Single<List<NotificationMediaItem>>
+    fun loadNotifications(size: Int): Single<List<NotificationMediaItem>>
     fun loadUnreadNotificationsCount(): Single<Int>
 }
 
@@ -19,6 +20,10 @@ class NotificationsLoader @Inject constructor(
 ): INotificationsLoader {
     override fun loadNotifications(): Single<List<NotificationMediaItem>> {
         return queryClient.getPage()
+    }
+
+    override fun loadNotifications(size: Int): Single<List<NotificationMediaItem>> {
+        return queryClient.getPage(size)
     }
 
     override fun loadUnreadNotificationsCount(): Single<Int> {
