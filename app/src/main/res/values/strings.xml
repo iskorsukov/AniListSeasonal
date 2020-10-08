@@ -50,4 +50,11 @@
     <string name="set_completed">Set as Completed</string>
     <string name="set_dropped">Set as Dropped</string>
     <string name="set_paused">Set as Paused</string>
+
+    <!-- Notifications -->
+    <string name="notification_show_aired">Show aired</string>
+    <string name="notification_new_group_title">New notifications</string>
+    <string name="unread_notifications">You have %1$d unread notifications</string>
+    <string name="ep_aired_notification">Ep %1$d aired at %2$s</string>
+    <string name="notifications_explanation">Shows last 50 notifications, for more visit you AniList profile</string>
 </resources>

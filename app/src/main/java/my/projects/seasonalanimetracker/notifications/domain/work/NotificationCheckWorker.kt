@@ -32,7 +32,6 @@ class NotificationCheckWorker @WorkerInject constructor(
     @Assisted workerParameters: WorkerParameters,
     private val notificationsDAO: NotificationsDAO,
     private val notificationsLoader: INotificationsLoader,
-    private val notificationEntityToDataMapper: NotificationEntityToDataMapper,
     private val notificationDataToEntityMapper: NotificationDataToEntityMapper
 ): RxWorker(context, workerParameters) {
 
@@ -70,12 +69,6 @@ class NotificationCheckWorker @WorkerInject constructor(
 
     private fun getUnreadNotificationsCount(): Single<Int> {
         return notificationsLoader.loadUnreadNotificationsCount()
-    }
-
-    private fun getStoredNotifications(): Single<List<NotificationMediaItem>> {
-        return notificationsDAO.getNotifications().map {
-            it.map { notificationEntityToDataMapper.map(it) }
-        }
     }
 
     private fun raiseNotifications(notifications: List<NotificationMediaItem>): Completable {
@@ -139,8 +132,12 @@ class NotificationCheckWorker @WorkerInject constructor(
 
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle(notification.media.titleEnglish ?: notification.media.titleRomaji ?: notification.media.titleNative ?: "Show aired")
-            .setContentText("Ep ${notification.episode} just aired at $formattedTime")
+            .setContentTitle(
+                notification.media.titleEnglish
+                    ?: notification.media.titleRomaji
+                    ?: notification.media.titleNative
+                    ?: applicationContext.getString(R.string.notification_show_aired))
+            .setContentText(applicationContext.getString(R.string.ep_aired_notification, notification.episode, formattedTime))
             .setSmallIcon(R.drawable.ic_notifications_white)
             .setAutoCancel(true)
 
@@ -150,8 +147,8 @@ class NotificationCheckWorker @WorkerInject constructor(
     private fun createGroupNotification(notifications: List<NotificationMediaItem>): Notification {
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle("New notifications")
-            .setContentText("You have ${notifications.size} unread notifications")
+            .setContentTitle(applicationContext.getString(R.string.notification_new_group_title))
+            .setContentText(applicationContext.getString(R.string.unread_notifications, notifications.size))
             .setSmallIcon(R.drawable.ic_notifications_white)
             .setAutoCancel(true)
 
