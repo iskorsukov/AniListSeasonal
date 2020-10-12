@@ -25,9 +25,13 @@ class ScheduleFragment: BaseFragment(), OnMediaItemClickListener, OnModifyMediaS
         return R.layout.fragment_schedule
     }
 
+    private var adapter: ScheduleTabViewPagerAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        scheduleViewModel.updateSchedule() // TODO figure out a better update scheme
+        if (savedInstanceState == null) {
+            scheduleViewModel.updateSchedule() // TODO figure out a better update scheme
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,11 +40,13 @@ class ScheduleFragment: BaseFragment(), OnMediaItemClickListener, OnModifyMediaS
             val items = scheduleVO.scheduleItems()
             Timber.d("Showing ${items.values.flatten().size} items")
 
-            if (pager.adapter == null) {
-                pager.adapter = ScheduleTabViewPagerAdapter(childFragmentManager, scheduleVO)
+            if (adapter == null) {
+                adapter = ScheduleTabViewPagerAdapter(childFragmentManager, scheduleVO)
+                pager.adapter = adapter
                 pager.setCurrentItem(1, false)
             } else {
-                (pager.adapter!! as ScheduleTabViewPagerAdapter).updateData(items)
+                pager.adapter = adapter
+                adapter!!.updateData(items)
             }
 
             tab_layout.setupWithViewPager(pager)
