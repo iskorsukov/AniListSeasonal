@@ -10,7 +10,9 @@
 
     <!-- Auth -->
     <string name="login_anilist">Login using ANILIST</string>
+    <string name="login_anilist_explanation">You can use your AniList account to log in. This will allow you to add shows to your media lists and receive notifications when a new episode of a followed show airs.</string>
     <string name="login_guest">Proceed without login</string>
+    <string name="login_guest_explanation">You can also login as guest. This option does not require an account, however you will be limited to browsing the weekly schedule for current season.</string>
 
     <string name="title_notifications">Notifications</string>
 

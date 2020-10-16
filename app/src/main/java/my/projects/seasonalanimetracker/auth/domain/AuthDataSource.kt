@@ -1,5 +1,6 @@
 package my.projects.seasonalanimetracker.auth.domain
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
 import dagger.Binds
@@ -32,9 +33,10 @@ class AuthDataSource @Inject constructor (private val prefs: SharedPreferences):
         return prefs.getString(AUTH_TOKEN_KEY, null)
     }
 
+    @SuppressLint("ApplySharedPref")
     override fun saveToken(token: String) {
         Timber.d("saving token $token")
-        prefs.edit().putString(AUTH_TOKEN_KEY, token).apply()
+        prefs.edit().putString(AUTH_TOKEN_KEY, token).commit()
     }
 
     override fun deleteToken() {
